@@ -39,7 +39,7 @@ public class VirtualSensorActor extends AbstractActor {
 		this.threshold = movingAvg > thresholdValue;
 		
 
-		System.out.println(this.readings); 
+		System.out.println(this.readings.toString());
 		System.out.println("Moving Average --> " + this.getMovingAgv());
 		System.out.println("Threshold " + (this.threshold ? "" : "Not ")  + "Exceeded \n");
 
@@ -51,7 +51,7 @@ public class VirtualSensorActor extends AbstractActor {
 
 		return this.readings
 		.stream()
-		.mapToDouble(NoiseReading::getVal)
+		.mapToDouble(NoiseReading::getNoiseLevel)
 		.reduce(0, (subtotal, element) -> subtotal + element / size);
 	}
 
