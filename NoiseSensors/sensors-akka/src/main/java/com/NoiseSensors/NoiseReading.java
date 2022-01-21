@@ -5,8 +5,6 @@ public class NoiseReading {
     private double X;
     private double Y;
     private double noiseLevel;
-    private double val;
-
 
     public NoiseReading() {
 
@@ -45,9 +43,5 @@ public class NoiseReading {
     @Override
     public String toString() {
         return "latitude: " + this.getX() + " longitude: " + this.getY() + " --> " + this.getNoiseLevel();
-    }
-
-    public double getVal() {
-        return this.val;
     }
 }
