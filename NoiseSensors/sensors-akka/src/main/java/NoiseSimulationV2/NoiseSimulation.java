@@ -1,4 +1,8 @@
-package NoiseSimulation;
+package NoiseSimulationV2;
+
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
 
 //    Input parameters:
 //    P = number of people -> random generated?
@@ -30,6 +34,9 @@ public class NoiseSimulation {
     private double posX = 0.0;
     private double posY = 0.0;
 
+    /* A list of the sensor present in the area */
+    private List<SensorObject> sensorList = new ArrayList<SensorObject>();
+
     public NoiseSimulation (int maxNoiseLevelPeople, int minNoiseLevelPeople,
                             int maxNoiseLevelVehicles, int minNoiseLevelVehicles,
                             int areaWidth, int areaLength, int timeStep) {
@@ -43,6 +50,24 @@ public class NoiseSimulation {
         this.areaStep = areaStep;
     }
 
+    /* Generate a couple of NoiseVehicle and NoiseIndividual and move them according to their speed in the rectangle
+       defined by areaLength and areaWidth;
+
+       The new positions of the object should be computed at each timeStep seconds when the noise generated will be
+       record in a text file containing the posX, posY and the value of noise in dB as a tuple (posX, posY, dB);
+
+       The simulation should take into consideration when an object is out of the area;
+
+       Question: should we consider "sensors" across the area or just record the noise level of the object?
+    */
+
+
+    /* Should create multiple file according to area */
+    File simulationData = new File("SimulationData.txt");
+
+    /* Create Individuals and Vehicles */
+
+    /* Move objects for a period of time and collect data for each square meter*/
 
 
 }
