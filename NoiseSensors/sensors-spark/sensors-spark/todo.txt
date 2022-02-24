@@ -1,0 +1,20 @@
+0. Make sure you are using Java 8--11 (export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-11.0.12.jdk/Contents/Home)
+
+1. Specify the SPARK_LOCAL_IP env variable: export SPARK_LOCAL_IP=127.0.0.1
+
+2. Create a configuration file from the template cp ./conf/spark-defaults.conf.template ./conf/spark-defaults.conf
+
+3. Modify the ./conf/spark-defaults.conf by adding these lines
+spark.master                        spark://127.0.0.1:7077
+spark.eventLog.enabled      true
+spark.eventLog.dir               /tmp/spark-events/
+
+3.1. Make sure that the directory you specify in the last line exists!
+
+4. Start the master ./sbin/start-master.sh
+
+5. Start the worker ./sbin/start-worker.sh spark://127.0.0.1:7077
+
+6. Execute an example ./bin/spark-submit --class it.polimi.middleware.spark.batch.wordcount.WordCount /path/to/project/target/spark_tutorial-1.0.jar spark://127.0.0.1:7077 /path/to/folder/where/files/are
+
+7. If you want to see the events that occurred during execution: ./sbin/start-history-server.sh and than connect from the browser to 127.0.0.1:18080
