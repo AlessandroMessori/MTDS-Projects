@@ -67,7 +67,7 @@ public class MqttKafkaBridge implements MqttCallback {
         System.out.println(message.toString());
 
         final String key = "Key";
-        final String value = message.toString().toUpperCase();
+        final String value = message.toString();
 
         final ProducerRecord<String, String> record = new ProducerRecord<>(kafkaTopic, key, value);
         final Future<RecordMetadata> future = kafkaProducer.send(record);

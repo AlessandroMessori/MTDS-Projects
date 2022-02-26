@@ -12,41 +12,61 @@ import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructField;
 import org.apache.spark.sql.types.StructType;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.TimeoutException;
 
 public class NoiseCleaning {
-    public static void main(String[] args) throws TimeoutException, StreamingQueryException {
-        LogUtils.setLogLevel();
+        public static void main(String[] args) throws TimeoutException, StreamingQueryException {
+                LogUtils.setLogLevel();
 
-        final String master = args.length > 0 ? args[0] : "local[4]";
+                // {"d":{"myName":"native","Seq #":173,"Uptime (sec)":1771,"Temp (C)":25,"Def
+                // Route":"fe80::212:7401:1:101"}}
 
-        final SparkSession spark = SparkSession
-                .builder()
-                .master(master)
-                .appName("NoiseCleaning")
-                .getOrCreate();
+                StructType payloadSchema = DataTypes.createStructType(new StructField[] {
+                                DataTypes.createStructField("d", DataTypes.StringType, true),
+                });
 
-        Dataset<Row> df = spark
-                .readStream()
-                .format("kafka")
-                .option("kafka.bootstrap.servers", "localhost:9092")
-                .option("subscribe", "raw_noise_readings")
-                .load();
+                StructType readingSchema = DataTypes.createStructType(new StructField[] {
+                                DataTypes.createStructField("myName", DataTypes.StringType, true),
+                                DataTypes.createStructField("Seq #", DataTypes.IntegerType, true),
+                                DataTypes.createStructField("Uptime (sec)", DataTypes.IntegerType, true),
+                                DataTypes.createStructField("Temp (C)", DataTypes.IntegerType, true),
+                                DataTypes.createStructField("Def Route", DataTypes.StringType, true)
+                });
 
-        // Query
-        StreamingQuery query = df
-                .selectExpr("CAST(key AS STRING)", "CAST(value AS STRING)")
-                .writeStream()
-                .outputMode("update")
-                .format("console")
-                .start();
+                final String master = args.length > 0 ? args[0] : "local[4]";
 
-        query.awaitTermination();
+                final SparkSession spark = SparkSession
+                                .builder()
+                                .master(master)
+                                .appName("NoiseCleaning")
+                                .getOrCreate();
 
-        spark.close();
+                Dataset<Row> df = spark
+                                .readStream()
+                                .format("kafka")
+                                .option("kafka.bootstrap.servers", "localhost:9092")
+                                .option("subscribe", "raw_noise_readings")
+                                .load();
 
-    }
+                df = df.withColumn("strVal", df.col("value").cast("String"));
+
+                df = df.withColumn("payload", org.apache.spark.sql.functions.from_json(df.col("strVal"),
+                                                payloadSchema));
+
+                df = df.withColumn("reading", org.apache.spark.sql.functions.from_json(df.col("payload").cast("String").substr(2, 100),
+                                                 readingSchema));
+
+                // Query
+                StreamingQuery query = df
+                                .select(df.col("reading.Seq #"), df.col("reading.Temp (C)"))
+                                .writeStream()
+                                .outputMode("update")
+                                .format("console")
+                                .start();
+
+                query.awaitTermination();
+
+                spark.close();
+
+        }
 }
