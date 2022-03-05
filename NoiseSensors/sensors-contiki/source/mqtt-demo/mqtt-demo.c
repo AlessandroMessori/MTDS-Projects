@@ -51,6 +51,9 @@
 #define LOG_MODULE "MQTT-DEMO"
 #define LOG_LEVEL LOG_LEVEL_INFO
 
+#define ARR_MAX_SIZE 6
+#define THRESHOLD 50
+
 #include <string.h>
 /*---------------------------------------------------------------------------*/
 /*
@@ -164,6 +167,80 @@ static mqtt_client_config_t conf;
 /*---------------------------------------------------------------------------*/
 PROCESS(mqtt_demo_process, "MQTT Demo");
 /*---------------------------------------------------------------------------*/
+
+//__________________USEFUL FUNCTIONS________________________________________________________
+
+
+static void updateSensorData(int *sensorData, int *arr_length, int counter)
+{
+
+  if (*arr_length >= ARR_MAX_SIZE)
+  {
+    int i;
+    for (i = 0; i < ARR_MAX_SIZE - 1; i++)
+    {
+      sensorData[i] = sensorData[i + 1];
+    }
+  }
+  else
+  {
+    *arr_length = *arr_length + 1;
+  }
+
+  sensorData[*arr_length - 1] = counter;
+}
+
+static char* printSensorData(int *sensorData, int arr_length, char *values)
+{
+
+	char number[5];
+	values[0] = '\0';
+	number[0] = '\0';
+	strcat(values, "[ ");
+
+  //sprintf(values, "%s", "[ ");
+
+  int i;
+  for (i = 0; i < arr_length; i++)
+  {
+    sprintf(number, "%d ", sensorData[i]);
+    strcat(values, number);
+  }
+  
+	strcat(values, "]");
+  //printf("%s", values);
+  
+  return values;
+  
+}
+
+static int computeArrayAvg(int *array, int arr_length)
+{
+  int i, total = 0;
+  for (i = 0; i < arr_length; i++)
+  {
+    total += array[i];
+  }
+
+  return total / arr_length;
+}
+
+//generate number in range [min,max)
+int random_number(int min, int max){
+    int number = min + rand() % (max - min);
+    return number; 
+}
+
+//------------------------------------------------------
+
+int ID;
+int x;
+int y;
+
+//------------------------------------------------------
+
+
+//__________________________________________________________________________________________
 int
 ipaddr_sprintf(char *buf, uint8_t buf_len, const uip_ipaddr_t *addr)
 {
@@ -344,7 +421,7 @@ update_config(void)
 }
 /*---------------------------------------------------------------------------*/
 static void
- init_config()
+init_config()
 {
   /* Populate configuration with default values */
   memset(&conf, 0, sizeof(mqtt_client_config_t));
@@ -372,31 +449,104 @@ subscribe(void)
   }
 }
 /*---------------------------------------------------------------------------*/
+/*
 static int
 get_onboard_temp(void)
 {
   return NATIVE_TEMPERATURE;
 }
+*/
 /*---------------------------------------------------------------------------*/
+/*
+static int get_measurement(void){
+	//GENERATE NOISE LEVEL - COMPUTE AVERAGE
+
+	static int arr_length = 0;
+  static int sensorData[ARR_MAX_SIZE];
+	unsigned short int value;
+	value = random_number(0, 100);
+	updateSensorData(sensorData, &arr_length, value);
+  //printSensorData(sensorData, arr_length);
+  unsigned short int avg = computeArrayAvg(sensorData, arr_length);
+
+	return avg;
+
+}
+*/
+
 static void
 publish(void)
 {
   /* Publish MQTT topic */
   int len;
   int remaining = APP_BUFFER_SIZE;
-
-  seq_nr_value++;
-
+  
+  
+  char values[50];
+	static int arr_length = 0;
+	static int sensorData[ARR_MAX_SIZE];
+	int value;
+	value = random_number(0, 100);
+	updateSensorData(sensorData, &arr_length, value);
+	int avg = computeArrayAvg(sensorData, arr_length);
+	
+	seq_nr_value++;
   buf_ptr = app_buffer;
+  
+  int coin = random_number(1, 3);
+ 
+  
+  if(avg < THRESHOLD){
+  
+  	if(coin == 1){
+  		avg = -1;
+  	}
+  	printf("%d\n", coin);
+  	
+		len = snprintf(buf_ptr, remaining,
+               	"{"
+               	"\"d\":{"
+               	"\"myID\":%d,"
+               	"\"X\":%d,"
+               	"\"Y\":%d,"
+               	"\"Seq #\":%d,"
+               	"\"Uptime (sec)\":%lu,"
+               	"\"Average Exceeded\":%d,"
+               	"\"Noise Level (dB)\":%d",
+               	ID, x, y, seq_nr_value, clock_seconds(), 0, avg);
+  }
 
+	else{
+		len = snprintf(buf_ptr, remaining,
+                 	"{"
+                 	"\"d\":{"
+                 	"\"myID\":%d,"
+               		"\"X\":%d,"
+               		"\"Y\":%d,"
+                 	"\"Seq #\":%d,"
+                 	"\"Uptime (sec)\":%lu,"
+                 	"\"Average Exceeded\":%d,"
+                 	"\"Noise Level (dB)\":\"%s\"",
+                 	ID, x, y, seq_nr_value,clock_seconds(), 1, printSensorData(sensorData, arr_length, values));
+	}
+
+		
+
+	
+
+	
+/*
   len = snprintf(buf_ptr, remaining,
                  "{"
                  "\"d\":{"
                  "\"myName\":\"%s\","
                  "\"Seq #\":%d,"
                  "\"Uptime (sec)\":%lu,"
-                 "\"Temp (C)\":%d",
-                 "native", seq_nr_value,clock_seconds(),get_onboard_temp()); 
+                 "\"Noise (dB)\":%d",
+                 "native", seq_nr_value,clock_seconds(), get_measurement());
+
+*/
+
 
   if(len < 0 || len >= remaining) {
     LOG_ERR("Buffer too short. Have %d, need %d + \\0\n", remaining, len);
@@ -428,11 +578,10 @@ publish(void)
     return;
   }
 
-  LOG_INFO("Testing");
-  LOG_INFO(app_buffer);
-
   mqtt_publish(&conn, NULL, pub_topic, (uint8_t *)app_buffer,
                strlen(app_buffer), MQTT_QOS_LEVEL_0, MQTT_RETAIN_OFF);
+               
+  printf("%s\n", app_buffer);
 
   LOG_INFO("Publish sent out!\n");
 }
@@ -578,10 +727,14 @@ PROCESS_THREAD(mqtt_demo_process, ev, data)
 
   init_config();
   update_config();
+  
+  ID = random_number(0, 100);
+  x = random_number(0, 10000);
+  y = random_number(0, 10000);
 
   /* Main loop */
   while(1) {
-
+		
     PROCESS_YIELD();
 
     if (ev == PROCESS_EVENT_TIMER && data == &publish_periodic_timer) {
@@ -597,3 +750,4 @@ PROCESS_THREAD(mqtt_demo_process, ev, data)
  * @}
  * @}
  */
+
