@@ -1,9 +1,7 @@
 package it.polimi.middleware.spark.cleaning;
 
 import it.polimi.middleware.spark.utils.LogUtils;
-import org.apache.spark.api.java.function.FlatMapFunction;
 import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Encoders;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
 import org.apache.spark.sql.streaming.StreamingQuery;
@@ -37,7 +35,7 @@ public class NoiseCleaning {
                                 DataTypes.createStructField("Y", DataTypes.IntegerType, true),
                                 DataTypes.createStructField("Seq #", DataTypes.IntegerType, true),
                                 DataTypes.createStructField("Uptime (sec)", DataTypes.IntegerType, true),
-                                DataTypes.createStructField("Average Excedeed", DataTypes.IntegerType, true),
+                                DataTypes.createStructField("Average Exceeded", DataTypes.IntegerType, true),
                                 DataTypes.createStructField("Noise Level (dB)", DataTypes.StringType, true),
                                 DataTypes.createStructField("Def Route", DataTypes.StringType, true)
                 });
@@ -65,21 +63,16 @@ public class NoiseCleaning {
                 df = df.withColumn("reading", org.apache.spark.sql.functions.from_json(df.col("payload").cast("String").substr(2, 1000),
                                                  readingSchema));
 
+                df.createOrReplaceTempView("RawNoise");
+
                 // Query
-                StreamingQuery query = df
-                                .sql("SELECT timestamp, reading.myID, reading.X, reading.Y, reading.Average Excedeed, reading.Noise Level (dB) WHERE (reading.X <> 'null' and reading.Y <> 'null') and ((reading.Average Excedeed = 0 and reading.Noise level (dB) > 0) or reading.Average excedeed = 1)")
+                StreamingQuery query = spark
+                                .sql("SELECT timestamp, reading.myID, reading.X, reading.Y, reading.`Average Exceeded`, reading.`Noise Level (dB)` FROM RawNoise WHERE ((reading.`Average Exceeded` = 0 and reading.`Noise level (dB)` > 0) or reading.`Average Exceeded` = 1) ")
                                 .writeStream()
                                 .outputMode("update")
                                 .format("console")
                                 .start();
                                 
-                
-                /*StreamingQuery query = df
-                								.writeStream()
-                                .outputMode("update")
-                                .format("console")
-                                .start();*/
-
                 query.awaitTermination();
 
                 spark.close();
