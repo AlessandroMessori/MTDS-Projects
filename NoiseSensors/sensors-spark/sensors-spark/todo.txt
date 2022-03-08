@@ -6,8 +6,8 @@
 
 3. Modify the ./conf/spark-defaults.conf by adding these lines
 spark.master                        spark://127.0.0.1:7077
-spark.eventLog.enabled      true
-spark.eventLog.dir               /tmp/spark-events/
+spark.eventLog.enabled              true
+spark.eventLog.dir                  /tmp/spark-events/
 
 3.1. Make sure that the directory you specify in the last line exists!
 
