@@ -18,12 +18,13 @@ public class NoiseCleaning {
 
                 // {"d":{"myName":"native","Seq #":173,"Uptime (sec)":1771,"Temp (C)":25,"Def
                 // Route":"fe80::212:7401:1:101"}}
-                
-                // {"d":{"myID":12,"X":537,"Y":2203,"Seq #":4,"Uptime (sec)":320,"Average Exceeded":1,"Noise Level (dB)":"[ 81 48 84 5 ]","Def 
-                // Route":"fe80::201:1:1:1"}}
-                
-                // {"d":{"myID":12,"X":537,"Y":2203,"Seq #":4,"Uptime (sec)":320,"Average Exceeded":0,"Noise Level (dB)":"55","Def Route":"fe80::201:1:1:1"}}
 
+                // {"d":{"myID":12,"X":537,"Y":2203,"Seq #":4,"Uptime (sec)":320,"Average
+                // Exceeded":1,"Noise Level (dB)":"[ 81 48 84 5 ]","Def
+                // Route":"fe80::201:1:1:1"}}
+
+                // {"d":{"myID":12,"X":537,"Y":2203,"Seq #":4,"Uptime (sec)":320,"Average
+                // Exceeded":0,"Noise Level (dB)":"55","Def Route":"fe80::201:1:1:1"}}
 
                 StructType payloadSchema = DataTypes.createStructType(new StructField[] {
                                 DataTypes.createStructField("d", DataTypes.StringType, true),
@@ -58,21 +59,34 @@ public class NoiseCleaning {
                 df = df.withColumn("strVal", df.col("value").cast("String"));
 
                 df = df.withColumn("payload", org.apache.spark.sql.functions.from_json(df.col("strVal"),
-                                                payloadSchema));
+                                payloadSchema));
 
-                df = df.withColumn("reading", org.apache.spark.sql.functions.from_json(df.col("payload").cast("String").substr(2, 1000),
-                                                 readingSchema));
+                df = df.withColumn("reading",
+                                org.apache.spark.sql.functions.from_json(
+                                                df.col("payload").cast("String").substr(2, 1000),
+                                                readingSchema));
 
                 df.createOrReplaceTempView("RawNoise");
 
                 // Query
                 StreamingQuery query = spark
                                 .sql("SELECT timestamp, reading.myID, reading.X, reading.Y, reading.`Average Exceeded`, reading.`Noise Level (dB)` FROM RawNoise WHERE ((reading.`Average Exceeded` = 0 and reading.`Noise Level (dB)` > 0) or (reading.`Average Exceeded` = 1 and reading.`Noise Level (dB)` NOT REGEXP '-'))")
+                                .select(org.apache.spark.sql.functions.to_json(
+                                                org.apache.spark.sql.functions.struct(
+                                                                "timestamp",
+                                                                "myID",
+                                                                "X",
+                                                                "Y",
+                                                                "`Average Exceeded`",
+                                                                "`Noise Level (dB)`"))
+                                                .alias("value"))
                                 .writeStream()
-                                .outputMode("update")
-                                .format("console")
+                                .format("kafka")
+                                .option("checkpointLocation", "/tmp/checkpoints")
+                                .option("kafka.bootstrap.servers", "localhost:9092")
+                                .option("topic", "clean_noise_readings")
                                 .start();
-                                
+
                 query.awaitTermination();
 
                 spark.close();
