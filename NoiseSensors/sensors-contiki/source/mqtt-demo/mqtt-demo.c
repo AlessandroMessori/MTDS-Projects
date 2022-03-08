@@ -52,7 +52,7 @@
 #define LOG_LEVEL LOG_LEVEL_INFO
 
 #define ARR_MAX_SIZE 6
-#define THRESHOLD 50
+#define THRESHOLD 25
 
 #include <string.h>
 /*---------------------------------------------------------------------------*/
@@ -116,7 +116,7 @@ static uint8_t state;
 #define DEFAULT_AUTH_TOKEN          "AUTHZ"
 #define DEFAULT_SUBSCRIBE_CMD_TYPE  "+"
 #define DEFAULT_BROKER_PORT         1883
-#define DEFAULT_PUBLISH_INTERVAL    (10 * CLOCK_SECOND)
+#define DEFAULT_PUBLISH_INTERVAL    (3 * CLOCK_SECOND)
 #define DEFAULT_KEEP_ALIVE_TIMER    60
 /*---------------------------------------------------------------------------*/
 PROCESS_NAME(mqtt_demo_process);
@@ -230,6 +230,7 @@ int random_number(int min, int max){
     int number = min + rand() % (max - min);
     return number; 
 }
+
 
 //------------------------------------------------------
 
@@ -487,22 +488,18 @@ publish(void)
 	static int sensorData[ARR_MAX_SIZE];
 	int value;
 	value = random_number(0, 100);
-	updateSensorData(sensorData, &arr_length, value);
+	if(value % 2 == 0){
+		updateSensorData(sensorData, &arr_length, value);
+	}
+	else{
+		updateSensorData(sensorData, &arr_length, value - 50);
+	}
 	int avg = computeArrayAvg(sensorData, arr_length);
 	
 	seq_nr_value++;
   buf_ptr = app_buffer;
   
-  int coin = random_number(1, 3);
- 
-  
   if(avg < THRESHOLD){
-  
-  	if(coin == 1){
-  		avg = -1;
-  	}
-  	printf("%d\n", coin);
-  	
 		len = snprintf(buf_ptr, remaining,
                	"{"
                	"\"d\":{"
