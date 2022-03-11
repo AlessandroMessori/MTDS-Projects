@@ -41,7 +41,7 @@ public class NoiseCleaning {
                                 DataTypes.createStructField("Def Route", DataTypes.StringType, true)
                 });
 
-                final String master = args.length > 0 ? args[0] : "local[4]";
+                final String master = args.length > 0 ? args[0] : "local[2]";
 
                 final SparkSession spark = SparkSession
                                 .builder()

@@ -1,0 +1,1 @@
+:: loading settings :: url = jar:file:/home/user/spark-3.2.1-bin-hadoop3.2/jars/ivy-2.5.0.jar!/org/apache/ivy/core/settings/ivysettings.xml

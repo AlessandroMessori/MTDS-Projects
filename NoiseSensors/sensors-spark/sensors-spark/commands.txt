@@ -1,0 +1,16 @@
+START ZOOKEEPER --> bin/zookeeper-server-start.sh config/zookeeper.properties
+
+START KAFKA BROKER --> bin/kafka-server-start.sh config/server.properties
+
+START BORDER ROUTER --> make TARGET=cooja connect-router-cooja
+
+RUN MAVEN PROJECT --> mvn compile exec:exec
+
+START SPARK MASTER --> ./sbin/start-master.sh 
+
+DEPLOY SPARK WORKER --> ./bin/spark-class org.apache.spark.deploy.worker.Worker spark://127.0.0.1:7077
+
+START SPARK CLEANING JOB --> ./bin/spark-submit --conf "spark.cores.max=2" --conf "spark.executor.cores=2" --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.1 --class it.polimi.middleware.spark.cleaning.NoiseCleaning /media/sf_MTDS-Projects/NoiseSensors/sensors-spark/sensors-spark/target/spark_tutorial-1.0.jar spark://127.0.0.1:7077
+
+START SPARK ENRICHMENT JOB --> ./bin/spark-submit  --conf "spark.cores.max=2" --conf "spark.executor.cores=2" --packages org.apache.spark:spark-sql-kafka-0-10_2.12:3.2.1 --conf "spark.sql.streaming.statefulOperator.checkCorrectness.enabled=false" --class it.polimi.middleware.spark.enrichment.NoiseEnrichment /media/sf_MTDS-Projects/NoiseSensors/sensors-spark/sensors-spark/target/spark_enrichment-1.0.jar spark://127.0.0.1:7077
+
