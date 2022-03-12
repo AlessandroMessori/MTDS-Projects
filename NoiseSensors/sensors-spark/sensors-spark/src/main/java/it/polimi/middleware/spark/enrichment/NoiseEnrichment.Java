@@ -9,7 +9,6 @@ import org.apache.spark.sql.streaming.StreamingQueryException;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructField;
 import org.apache.spark.sql.types.StructType;
-import static org.apache.spark.sql.functions.*;
 
 import java.util.concurrent.TimeoutException;
 
@@ -74,7 +73,10 @@ public class NoiseEnrichment {
                                 .sql("SELECT * FROM MinDist AS MD JOIN NoisePOI AS NP ON MD.`Seq #` =  NP.`Seq #` AND MD.`min(Dist)` = NP.Dist ")
                                 .writeStream()
                                 .outputMode("Append")
-                                .format("console")
+                                .format("csv")
+                                .option("format", "append") 
+                                .option("path", "/home/user/Data/") 
+                                .option("checkpointLocation", "/home/user/checkpoints")
                                 .start();
 
                 query.awaitTermination();
