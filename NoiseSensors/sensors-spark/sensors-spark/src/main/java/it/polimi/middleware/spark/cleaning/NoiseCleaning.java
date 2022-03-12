@@ -70,13 +70,14 @@ public class NoiseCleaning {
 
                 // Query
                 StreamingQuery query = spark
-                                .sql("SELECT timestamp, reading.myID, reading.X, reading.Y, reading.`Average Exceeded`, reading.`Noise Level (dB)` FROM RawNoise WHERE ((reading.`Average Exceeded` = 0 and reading.`Noise Level (dB)` > 0) or (reading.`Average Exceeded` = 1 and reading.`Noise Level (dB)` NOT REGEXP '-'))")
+                                .sql("SELECT timestamp, reading.myID, reading.`Seq #`, reading.X, reading.Y, reading.`Average Exceeded`, reading.`Noise Level (dB)` FROM RawNoise WHERE ((reading.`Average Exceeded` = 0 and reading.`Noise Level (dB)` > 0) or (reading.`Average Exceeded` = 1 and reading.`Noise Level (dB)` NOT REGEXP '-'))")
                                 .select(org.apache.spark.sql.functions.to_json(
                                                 org.apache.spark.sql.functions.struct(
                                                                 "timestamp",
                                                                 "myID",
                                                                 "X",
                                                                 "Y",
+                                                                "`Seq #`",
                                                                 "`Average Exceeded`",
                                                                 "`Noise Level (dB)`"))
                                                 .alias("value"))

@@ -36,7 +36,7 @@ public class NoiseEnrichment {
                 Dataset<Row> poiDataset = spark
                                 .read()
                                 .option("header", "true")
-                                .csv("/media/sf_MTDS-Projects/NoiseSensors/sensors-spark/sensors-spark/files/poi_italy.csv");
+                                .csv("/media/sf_MTDS-Projects/NoiseSensors/sensors-spark/sensors-spark/files/poi_italy copy.csv");
 
                 poiDataset.createOrReplaceTempView("Poi");
 
@@ -58,20 +58,20 @@ public class NoiseEnrichment {
                 noiseStream.createOrReplaceTempView("CleanNoise");
 
                 // Query
-                Dataset<Row> noiseProductPoi = spark
-                                .sql("SELECT N.reading.`Seq #`, N.timestamp, N.reading.X, N.reading.Y, N.reading.`Average Exceeded`, N.reading.`Noise Level (dB)`, P.name, P.region,  (N.reading.X +  P.Latitude + N.reading.Y + P.Longitude) AS Dist FROM CleanNoise AS N CROSS JOIN Poi AS P")                 
-                                .withWatermark("timestamp", "20 seconds");
+                Dataset<Row> noisePOI = spark
+                                .sql("SELECT N.reading.`Seq #`, N.timestamp, N.reading.X, N.reading.Y, N.reading.`Average Exceeded`, N.reading.`Noise Level (dB)`, P.name, P.region,  (N.reading.X +  P.Latitude + N.reading.Y + P.Longitude) AS Dist FROM CleanNoise AS N CROSS JOIN Poi AS P");                
 
-                Dataset<Row> minDist = noiseProductPoi
-                                .withWatermark("timestamp", "20 seconds")
-                                .groupBy("timestamp", "`Seq #`")
-                                .min("dist");
+                noisePOI
+                        .withWatermark("timestamp", "10 seconds")
+                        .createOrReplaceTempView("NoisePOI");
 
-                noiseProductPoi.createOrReplaceTempView("NoisePOI");
+                Dataset<Row> minDist = spark
+                                .sql("SELECT `Seq #`, MIN(Dist) FROM NoisePOI GROUP BY `Seq #`, timestamp");    
+                                
                 minDist.createOrReplaceTempView("MinDist");
 
                 StreamingQuery query = spark
-                                .sql("SELECT  * FROM MinDist AS MD JOIN NoisePOI AS NP ON (MD.`Seq #` = NP.`Seq #`)")
+                                .sql("SELECT * FROM MinDist AS MD JOIN NoisePOI AS NP ON MD.`Seq #` =  NP.`Seq #` AND MD.`min(Dist)` = NP.Dist ")
                                 .writeStream()
                                 .outputMode("Append")
                                 .format("console")
