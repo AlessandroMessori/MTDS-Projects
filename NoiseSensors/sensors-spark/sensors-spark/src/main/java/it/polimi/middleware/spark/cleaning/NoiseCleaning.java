@@ -9,6 +9,7 @@ import org.apache.spark.sql.streaming.StreamingQueryException;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructField;
 import org.apache.spark.sql.types.StructType;
+import static org.apache.spark.sql.functions.*;
 
 import java.util.concurrent.TimeoutException;
 
@@ -58,28 +59,26 @@ public class NoiseCleaning {
 
                 df = df.withColumn("strVal", df.col("value").cast("String"));
 
-                df = df.withColumn("payload", org.apache.spark.sql.functions.from_json(df.col("strVal"),
-                                payloadSchema));
+                df = df.withColumn("payload", from_json(df.col("strVal"), payloadSchema));
 
-                df = df.withColumn("reading",
-                                org.apache.spark.sql.functions.from_json(
-                                                df.col("payload").cast("String").substr(2, 1000),
-                                                readingSchema));
+                df = df.withColumn("reading", from_json(
+                                df.col("payload").cast("String").substr(2, 1000),
+                                readingSchema));
 
                 df.createOrReplaceTempView("RawNoise");
 
                 // Query
                 StreamingQuery query = spark
                                 .sql("SELECT timestamp, reading.myID, reading.`Seq #`, reading.X, reading.Y, reading.`Average Exceeded`, reading.`Noise Level (dB)` FROM RawNoise WHERE ((reading.`Average Exceeded` = 0 and reading.`Noise Level (dB)` > 0) or (reading.`Average Exceeded` = 1 and reading.`Noise Level (dB)` NOT REGEXP '-'))")
-                                .select(org.apache.spark.sql.functions.to_json(
-                                                org.apache.spark.sql.functions.struct(
-                                                                "timestamp",
-                                                                "myID",
-                                                                "X",
-                                                                "Y",
-                                                                "`Seq #`",
-                                                                "`Average Exceeded`",
-                                                                "`Noise Level (dB)`"))
+                                .select(to_json(
+                                                struct(
+                                                        "timestamp",
+                                                        "myID",
+                                                        "X",
+                                                        "Y",
+                                                        "`Seq #`",
+                                                        "`Average Exceeded`",
+                                                        "`Noise Level (dB)`"))
                                                 .alias("value"))
                                 .writeStream()
                                 .format("kafka")

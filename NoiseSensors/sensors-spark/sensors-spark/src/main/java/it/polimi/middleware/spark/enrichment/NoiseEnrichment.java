@@ -4,15 +4,44 @@ import it.polimi.middleware.spark.utils.LogUtils;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
+import org.apache.spark.sql.api.java.UDF4;
 import org.apache.spark.sql.streaming.StreamingQuery;
 import org.apache.spark.sql.streaming.StreamingQueryException;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructField;
 import org.apache.spark.sql.types.StructType;
+import static org.apache.spark.sql.functions.*;
 
 import java.util.concurrent.TimeoutException;
 
 public class NoiseEnrichment {
+
+        private static double deg2rad(double deg) {
+                return deg * (Math.PI / 180);
+        }
+
+        private static UDF4<Double,Double,Double,Double,Double> distanceFromGEO()
+        {
+          return ( lat1, lon1, lat2, lon2) -> {
+                // Code taken by Stack Overflow
+
+                int R = 6371; // Radius of the earth in km
+                double dLat = deg2rad(lat2-lat1);  // deg2rad below
+                double dLon = deg2rad(lon2-lon1); 
+
+                double a = 
+                  Math.sin(dLat/2) * Math.sin(dLat/2) +
+                  Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
+                  Math.sin(dLon/2) * Math.sin(dLon/2)
+                  ; 
+
+                double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+                double d = R * c; // Distance in km
+                return d;
+          };
+
+        }
+
         public static void main(String[] args) throws TimeoutException, StreamingQueryException {
                 LogUtils.setLogLevel();
 
@@ -32,14 +61,14 @@ public class NoiseEnrichment {
                                 .appName("NoiseEnrichment")
                                 .getOrCreate();
 
+                spark.udf().register("GEO_DISTANCE", distanceFromGEO(), DataTypes.DoubleType);
+
                 Dataset<Row> poiDataset = spark
                                 .read()
                                 .option("header", "true")
                                 .csv("/media/sf_MTDS-Projects/NoiseSensors/sensors-spark/sensors-spark/files/poi_italy copy.csv");
 
                 poiDataset.createOrReplaceTempView("Poi");
-
-                // poiDataset.show();
 
                 Dataset<Row> noiseStream = spark
                                 .readStream()
@@ -51,22 +80,21 @@ public class NoiseEnrichment {
                 noiseStream = noiseStream.withColumn("strVal", noiseStream.col("value").cast("String"));
 
                 noiseStream = noiseStream.withColumn("reading",
-                                org.apache.spark.sql.functions.from_json(noiseStream.col("strVal").cast("String"),
-                                                readingSchema));
+                                from_json(noiseStream.col("strVal").cast("String"), readingSchema));
 
                 noiseStream.createOrReplaceTempView("CleanNoise");
 
                 // Query
                 Dataset<Row> noisePOI = spark
-                                .sql("SELECT N.reading.`Seq #`, N.timestamp, N.reading.X, N.reading.Y, N.reading.`Average Exceeded`, N.reading.`Noise Level (dB)`, P.name, P.region,  (N.reading.X +  P.Latitude + N.reading.Y + P.Longitude) AS Dist FROM CleanNoise AS N CROSS JOIN Poi AS P");                
+                                .sql("SELECT N.reading.`Seq #`, N.timestamp, N.reading.X, N.reading.Y, N.reading.`Average Exceeded`, N.reading.`Noise Level (dB)`, P.name, P.region,  GEO_DISTANCE(DOUBLE(N.reading.X), DOUBLE(P.Latitude), DOUBLE(N.reading.Y), DOUBLE(P.Longitude)) AS Dist FROM CleanNoise AS N CROSS JOIN Poi AS P");
 
                 noisePOI
-                        .withWatermark("timestamp", "10 seconds")
-                        .createOrReplaceTempView("NoisePOI");
+                                .withWatermark("timestamp", "10 seconds")
+                                .createOrReplaceTempView("NoisePOI");
 
                 Dataset<Row> minDist = spark
-                                .sql("SELECT `Seq #`, MIN(Dist) FROM NoisePOI GROUP BY `Seq #`, timestamp");    
-                                
+                                .sql("SELECT `Seq #`, MIN(Dist) FROM NoisePOI GROUP BY `Seq #`, timestamp");
+
                 minDist.createOrReplaceTempView("MinDist");
 
                 StreamingQuery query = spark
@@ -74,14 +102,13 @@ public class NoiseEnrichment {
                                 .writeStream()
                                 .outputMode("Append")
                                 .format("csv")
-                                .option("format", "append") 
-                                .option("path", "/home/user/Data/") 
-                                .option("checkpointLocation", "/home/user/checkpoints")
+                                .option("format", "append")
+                                .option("path", "/home/user/Data/")
+                                .option("checkpointLocation", "/home/user/checkpoints2")
                                 .start();
 
                 query.awaitTermination();
 
                 spark.close();
-
         }
 }
