@@ -1,0 +1,1 @@
+make TARGET=cooja connect-router-cooja
