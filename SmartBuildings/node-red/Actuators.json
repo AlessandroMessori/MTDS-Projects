@@ -1,0 +1,244 @@
+[
+    {
+        "id": "8268d5ea2538ea0d",
+        "type": "tab",
+        "label": "Backup Room Actuator",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "5eefae07e55eef18",
+        "type": "tab",
+        "label": "Main Room Actuator",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "ddfecfd2876381ee",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "192.168.1.12",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "sessionExpiry": ""
+    },
+    {
+        "id": "bb30c9b668281e84",
+        "type": "function",
+        "z": "8268d5ea2538ea0d",
+        "name": "Logger",
+        "func": "var hbDif = new Date() - context.global.lastHeartBeat;\n\nvar seconds_from_last_HeartBeat = hbDif / 1000;\n\nvar mainActuatorActive = seconds_from_last_HeartBeat < 30;\n\nif (mainActuatorActive) {\n    msg.message = \"Main Actuator is Active\"\n    return msg;   \n}\n\nmsg.payload = msg.payload.toString().replace(/,(?![\" ])/g, \".\");\nmsg.payload = JSON.parse(msg.payload).d;\n\ntemperatureThreshold = 22.0\nhumidityThreshold = 38.0\n\nif (!context.global.lastChange) {\n    context.global.lastChange = new Date();\n}\n\nif (!context.global.temperatureReadings) {\n    context.global.temperatureReadings = [];\n}\n\nif (!context.global.temperatureMVA) {\n    context.global.temperatureMVA = 0;\n}\n\nif (!context.global.humidityReadings) {\n    context.global.humidityReadings = [];\n}\n\nif (!context.global.humidityMVA) {\n    context.global.homidityMVA = 0;\n}\n\n\nif (!context.global.heating) {\n    context.global.heating = false;\n}\n\n// computes the moving average of last 5 readings\ncontext.global.temperatureReadings.push(msg.payload[\"Temp (C)\"])\ncontext.global.humidityReadings.push(msg.payload[\"Hum (kg/m^3)\"])\n\nif (context.global.temperatureReadings.length == 6) {\n  context.global.temperatureReadings = context.global.temperatureReadings.slice(1);\n} \n\nif (context.global.humidityReadings.length == 6) {\n  context.global.humidityReadings = context.global.humidityReadings.slice(1);\n} \n\n\ncontext.global.temperatureMVA = context.global.temperatureReadings.reduce((a,b) => a + b, 0) / context.global.temperatureReadings.length;\ncontext.global.humidityMVA = context.global.humidityReadings.reduce((a,b) => a + b, 0) / context.global.humidityReadings.length;\n\n\nvar dif = new Date() - context.global.lastChange;\n\nvar seconds_from_T1_to_T2 = dif / 1000;\n\nvar timeoutPassed = seconds_from_T1_to_T2 > 30;\n\nmsg.message = \"Temperature MVA: \" + context.global.temperatureMVA;\n// msg.message = \"Temperature current: \" + context.global.temperatureReadings;\n// msg.message += \"Humidity current: \" + context.global.humidityReadings;\n \n \nif (context.global.temperatureMVA < temperatureThreshold && !context.global.heating && timeoutPassed) {\n    context.global.heating = true;\n    context.global.lastChange = new Date();\n    msg.message += \" --> Temperature is low, Turning on heating for room x\"\n} \nelse if (context.global.temperatureMVA > temperatureThreshold && context.global.heating && context.global.humidityMVA > humidityThreshold  && timeoutPassed) {\n    context.global.heating = false;\n    context.global.lastChange = new Date();\n    msg.message += \" --> Temperature is high, Turning off heating for room x\"\n}\n\nmsg.message += \", Humidity MVA: \" + context.global.humidityMVA;\n \nif (context.global.humidityMVA < temperatureThreshold && !context.global.heating && timeoutPassed) {\n    context.global.heating = true;\n    context.global.lastChange = new Date();\n    msg.message += \" --> Humidity is low, Turning on heating for room x\"\n} \nelse if (context.global.temperatureMVA > temperatureThreshold && context.global.heating && context.global.humidityMVA > humidityThreshold  && timeoutPassed) {\n    context.global.heating = false;\n    context.global.lastChange = new Date();\n    msg.message += \" --> Humidity is high, Turning off heating for room x\"\n}\n\nreturn msg;\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 280,
+        "wires": [
+            [
+                "a538035532dd2c18"
+            ]
+        ]
+    },
+    {
+        "id": "e0d63ae89d23a4cd",
+        "type": "mqtt in",
+        "z": "8268d5ea2538ea0d",
+        "name": "",
+        "topic": "iot/native/launchpad/json",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "ddfecfd2876381ee",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 210,
+        "y": 280,
+        "wires": [
+            [
+                "bb30c9b668281e84"
+            ]
+        ]
+    },
+    {
+        "id": "a538035532dd2c18",
+        "type": "debug",
+        "z": "8268d5ea2538ea0d",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "message",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 620,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "fa511e8eceeaa6db",
+        "type": "mqtt in",
+        "z": "8268d5ea2538ea0d",
+        "name": "",
+        "topic": "heartbeat",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "ddfecfd2876381ee",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 140,
+        "y": 160,
+        "wires": [
+            [
+                "abcfa9f9b1ae2a9e"
+            ]
+        ]
+    },
+    {
+        "id": "abcfa9f9b1ae2a9e",
+        "type": "function",
+        "z": "8268d5ea2538ea0d",
+        "name": "Logger",
+        "func": "context.global.lastHeartBeat = new Date();\n\nmsg.message = \"Received an heartbeat from the main actuator\"\n\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 160,
+        "wires": [
+            [
+                "7df3616667b71e2c"
+            ]
+        ]
+    },
+    {
+        "id": "7df3616667b71e2c",
+        "type": "debug",
+        "z": "8268d5ea2538ea0d",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "message",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 640,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "533cc8147a0c451c",
+        "type": "comment",
+        "z": "5eefae07e55eef18",
+        "name": "WARNING: please check you have started this container with a volume that is mounted to /data\\n otherwise any flow changes are lost when you redeploy or upgrade the container\\n (e.g. upgrade to a more recent node-red docker image).\\n  If you are using named volumes you can ignore this warning.\\n Double click or see info side panel to learn how to start Node-RED in Docker to save your work",
+        "info": "\nTo start docker with a bind mount volume (-v option), for example:\n\n```\ndocker run -it -p 1880:1880 -v /home/user/node_red_data:/data --name mynodered nodered/node-red\n```\n\nwhere `/home/user/node_red_data` is a directory on your host machine where you want to store your flows.\n\nIf you do not do this then you can experiment and redploy flows, but if you restart or upgrade the container the flows will be disconnected and lost. \n\nThey will still exist in a hidden data volume, which can be recovered using standard docker techniques, but that is much more complex than just starting with a named volume as described above.",
+        "x": 330,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "e6947ba60bcf21e4",
+        "type": "debug",
+        "z": "5eefae07e55eef18",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "message",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 680,
+        "y": 300,
+        "wires": []
+    },
+    {
+        "id": "5925cb0325a5451b",
+        "type": "mqtt in",
+        "z": "5eefae07e55eef18",
+        "name": "",
+        "topic": "iot/native/launchpad/json",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "ddfecfd2876381ee",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 115,
+        "y": 300,
+        "wires": [
+            [
+                "4172925a96771578"
+            ]
+        ]
+    },
+    {
+        "id": "4172925a96771578",
+        "type": "function",
+        "z": "5eefae07e55eef18",
+        "name": "Logger",
+        "func": "msg.payload = msg.payload.toString().replace(/,(?![\" ])/g, \".\");\nmsg.payload = JSON.parse(msg.payload).d;\n\ntemperatureThreshold = 22.0\nhumidityThreshold = 38.0\n\nif (!context.global.lastChange) {\n    context.global.lastChange = new Date();\n}\n\nif (!context.global.temperatureReadings) {\n    context.global.temperatureReadings = [];\n}\n\nif (!context.global.temperatureMVA) {\n    context.global.temperatureMVA = 0;\n}\n\nif (!context.global.humidityReadings) {\n    context.global.humidityReadings = [];\n}\n\nif (!context.global.humidityMVA) {\n    context.global.homidityMVA = 0;\n}\n\n\nif (!context.global.heating) {\n    context.global.heating = false;\n}\n\n// computes the moving average of last 5 readings\ncontext.global.temperatureReadings.push(msg.payload[\"Temp (C)\"])\ncontext.global.humidityReadings.push(msg.payload[\"Hum (kg/m^3)\"])\n\nif (context.global.temperatureReadings.length == 6) {\n  context.global.temperatureReadings = context.global.temperatureReadings.slice(1);\n} \n\nif (context.global.humidityReadings.length == 6) {\n  context.global.humidityReadings = context.global.humidityReadings.slice(1);\n} \n\n\ncontext.global.temperatureMVA = context.global.temperatureReadings.reduce((a,b) => a + b, 0) / context.global.temperatureReadings.length;\ncontext.global.humidityMVA = context.global.humidityReadings.reduce((a,b) => a + b, 0) / context.global.humidityReadings.length;\n\n\nvar dif = new Date() - context.global.lastChange;\n\nvar seconds_from_T1_to_T2 = dif / 1000;\n\nvar timeoutPassed = seconds_from_T1_to_T2 > 30;\n\nmsg.message = \"Temperature MVA: \" + context.global.temperatureMVA;\n// msg.message = \"Temperature current: \" + context.global.temperatureReadings;\n// msg.message += \"Humidity current: \" + context.global.humidityReadings;\n \n \nif (context.global.temperatureMVA < temperatureThreshold && !context.global.heating && timeoutPassed) {\n    context.global.heating = true;\n    context.global.lastChange = new Date();\n    msg.message += \" --> Temperature is low, Turning on heating for room x\"\n} \nelse if (context.global.temperatureMVA > temperatureThreshold && context.global.heating && context.global.humidityMVA > humidityThreshold  && timeoutPassed) {\n    context.global.heating = false;\n    context.global.lastChange = new Date();\n    msg.message += \" --> Temperature is high, Turning off heating for room x\"\n}\n\nmsg.message += \", Humidity MVA: \" + context.global.humidityMVA;\n \nif (context.global.humidityMVA < temperatureThreshold && !context.global.heating && timeoutPassed) {\n    context.global.heating = true;\n    context.global.lastChange = new Date();\n    msg.message += \" --> Humidity is low, Turning on heating for room x\"\n} \nelse if (context.global.temperatureMVA > temperatureThreshold && context.global.heating && context.global.humidityMVA > humidityThreshold  && timeoutPassed) {\n    context.global.heating = false;\n    context.global.lastChange = new Date();\n    msg.message += \" --> Humidity is high, Turning off heating for room x\"\n}\n\nreturn msg;\n\n",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 300,
+        "wires": [
+            [
+                "e6947ba60bcf21e4",
+                "8ca3c5956dd55d1f"
+            ]
+        ]
+    },
+    {
+        "id": "8ca3c5956dd55d1f",
+        "type": "mqtt out",
+        "z": "5eefae07e55eef18",
+        "name": "",
+        "topic": "heartbeat",
+        "qos": "2",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "ddfecfd2876381ee",
+        "x": 830,
+        "y": 400,
+        "wires": []
+    }
+]
