@@ -1,0 +1,23 @@
+[
+    {
+        "buildingId": 1,
+        "nActuatorsPerRoom": 2,
+        "nSensorsPerRoom": 3,
+        "nFloors": 3,
+        "nRoomsPerFloor": 5
+    },
+    {
+        "buildingId": 2,
+        "nActuatorsPerRoom": 2,
+        "nSensorsPerRoom": 3,
+        "nFloors": 2,
+        "nRoomsPerFloor": 3
+    },
+    {
+        "buildingId": 3,
+        "nActuatorsPerRoom": 2,
+        "nSensorsPerRoom": 3,
+        "nFloors": 6,
+        "nRoomsPerFloor": 7
+    }
+]

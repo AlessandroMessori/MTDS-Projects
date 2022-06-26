@@ -14,3 +14,5 @@ target/
 .idea/
 .DS_Store
 
+SmartBuildings/node-red/generatedFlows/
+
