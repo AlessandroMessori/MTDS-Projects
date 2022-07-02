@@ -1,0 +1,17 @@
+[
+    {
+        "buildingId": 1,
+        "nSensorsPerRoom": 3,
+        "nRooms": 5
+    },
+    {
+        "buildingId": 2,
+        "nSensorsPerRoom": 3,
+        "nRooms": 3
+    },
+    {
+        "buildingId": 3,
+        "nSensorsPerRoom": 3,
+        "nRooms": 7
+    }
+]
