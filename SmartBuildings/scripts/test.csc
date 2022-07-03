@@ -73,13 +73,13 @@
         <mote>
       <interface_config>
         org.contikios.cooja.interfaces.Position
-        <x>1</x>
-        <y>1</y>
+        <x>-2.5</x>
+        <y>2.5</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-        <id>0-0</id>
+        <id>0</id>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiRadio
@@ -93,13 +93,13 @@
     </mote>    <mote>
       <interface_config>
         org.contikios.cooja.interfaces.Position
-        <x>1</x>
-        <y>1</y>
+        <x>2.5</x>
+        <y>-2.5</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-        <id>0-1</id>
+        <id>1</id>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiRadio
@@ -113,13 +113,13 @@
     </mote>    <mote>
       <interface_config>
         org.contikios.cooja.interfaces.Position
-        <x>1</x>
-        <y>1</y>
+        <x>-2.5</x>
+        <y>-2.5</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-        <id>0-2</id>
+        <id>2</id>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiRadio
@@ -133,13 +133,13 @@
     </mote>    <mote>
       <interface_config>
         org.contikios.cooja.interfaces.Position
-        <x>1</x>
-        <y>1</y>
+        <x>-2.5</x>
+        <y>-2.5</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-        <id>1-0</id>
+        <id>3</id>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiRadio
@@ -153,13 +153,13 @@
     </mote>    <mote>
       <interface_config>
         org.contikios.cooja.interfaces.Position
-        <x>1</x>
-        <y>1</y>
+        <x>2.5</x>
+        <y>-7.5</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-        <id>1-1</id>
+        <id>4</id>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiRadio
@@ -173,13 +173,13 @@
     </mote>    <mote>
       <interface_config>
         org.contikios.cooja.interfaces.Position
-        <x>1</x>
-        <y>1</y>
+        <x>-2.5</x>
+        <y>-7.5</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-        <id>1-2</id>
+        <id>5</id>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiRadio
@@ -193,13 +193,13 @@
     </mote>    <mote>
       <interface_config>
         org.contikios.cooja.interfaces.Position
-        <x>1</x>
-        <y>1</y>
+        <x>2.5</x>
+        <y>2.5</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-        <id>2-0</id>
+        <id>6</id>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiRadio
@@ -213,13 +213,13 @@
     </mote>    <mote>
       <interface_config>
         org.contikios.cooja.interfaces.Position
-        <x>1</x>
-        <y>1</y>
+        <x>7.5</x>
+        <y>-2.5</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-        <id>2-1</id>
+        <id>7</id>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiRadio
@@ -233,13 +233,13 @@
     </mote>    <mote>
       <interface_config>
         org.contikios.cooja.interfaces.Position
-        <x>1</x>
-        <y>1</y>
+        <x>2.5</x>
+        <y>-2.5</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-        <id>2-2</id>
+        <id>8</id>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiRadio
@@ -253,13 +253,13 @@
     </mote>    <mote>
       <interface_config>
         org.contikios.cooja.interfaces.Position
-        <x>1</x>
-        <y>1</y>
+        <x>2.5</x>
+        <y>-2.5</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-        <id>3-0</id>
+        <id>9</id>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiRadio
@@ -273,13 +273,13 @@
     </mote>    <mote>
       <interface_config>
         org.contikios.cooja.interfaces.Position
-        <x>1</x>
-        <y>1</y>
+        <x>7.5</x>
+        <y>-7.5</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-        <id>3-1</id>
+        <id>10</id>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiRadio
@@ -293,13 +293,13 @@
     </mote>    <mote>
       <interface_config>
         org.contikios.cooja.interfaces.Position
-        <x>1</x>
-        <y>1</y>
+        <x>2.5</x>
+        <y>-7.5</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-        <id>3-2</id>
+        <id>11</id>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiRadio
@@ -313,13 +313,13 @@
     </mote>    <mote>
       <interface_config>
         org.contikios.cooja.interfaces.Position
-        <x>1</x>
-        <y>1</y>
+        <x>7.5</x>
+        <y>2.5</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-        <id>4-0</id>
+        <id>12</id>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiRadio
@@ -333,13 +333,13 @@
     </mote>    <mote>
       <interface_config>
         org.contikios.cooja.interfaces.Position
-        <x>1</x>
-        <y>1</y>
+        <x>12.5</x>
+        <y>-2.5</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-        <id>4-1</id>
+        <id>13</id>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiRadio
@@ -353,13 +353,13 @@
     </mote>    <mote>
       <interface_config>
         org.contikios.cooja.interfaces.Position
-        <x>1</x>
-        <y>1</y>
+        <x>7.5</x>
+        <y>-2.5</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-        <id>4-2</id>
+        <id>14</id>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiRadio
@@ -413,13 +413,13 @@
     </mote>    <mote>
       <interface_config>
         org.contikios.cooja.interfaces.Position
-        <x>1</x>
-        <y>1</y>
+        <x>-2.5</x>
+        <y>2.5</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-        <id>0-0</id>
+        <id>15</id>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiRadio
@@ -433,13 +433,13 @@
     </mote>    <mote>
       <interface_config>
         org.contikios.cooja.interfaces.Position
-        <x>1</x>
-        <y>1</y>
+        <x>2.5</x>
+        <y>-2.5</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-        <id>0-1</id>
+        <id>16</id>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiRadio
@@ -453,13 +453,13 @@
     </mote>    <mote>
       <interface_config>
         org.contikios.cooja.interfaces.Position
-        <x>1</x>
-        <y>1</y>
+        <x>-2.5</x>
+        <y>-2.5</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-        <id>0-2</id>
+        <id>17</id>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiRadio
@@ -473,13 +473,13 @@
     </mote>    <mote>
       <interface_config>
         org.contikios.cooja.interfaces.Position
-        <x>1</x>
-        <y>1</y>
+        <x>-2.5</x>
+        <y>-2.5</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-        <id>1-0</id>
+        <id>18</id>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiRadio
@@ -493,13 +493,13 @@
     </mote>    <mote>
       <interface_config>
         org.contikios.cooja.interfaces.Position
-        <x>1</x>
-        <y>1</y>
+        <x>2.5</x>
+        <y>-7.5</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-        <id>1-1</id>
+        <id>19</id>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiRadio
@@ -513,13 +513,13 @@
     </mote>    <mote>
       <interface_config>
         org.contikios.cooja.interfaces.Position
-        <x>1</x>
-        <y>1</y>
+        <x>-2.5</x>
+        <y>-7.5</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-        <id>1-2</id>
+        <id>20</id>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiRadio
@@ -533,13 +533,13 @@
     </mote>    <mote>
       <interface_config>
         org.contikios.cooja.interfaces.Position
-        <x>1</x>
-        <y>1</y>
+        <x>2.5</x>
+        <y>2.5</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-        <id>2-0</id>
+        <id>21</id>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiRadio
@@ -553,13 +553,13 @@
     </mote>    <mote>
       <interface_config>
         org.contikios.cooja.interfaces.Position
-        <x>1</x>
-        <y>1</y>
+        <x>7.5</x>
+        <y>-2.5</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-        <id>2-1</id>
+        <id>22</id>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiRadio
@@ -573,13 +573,13 @@
     </mote>    <mote>
       <interface_config>
         org.contikios.cooja.interfaces.Position
-        <x>1</x>
-        <y>1</y>
+        <x>2.5</x>
+        <y>-2.5</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-        <id>2-2</id>
+        <id>23</id>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiRadio
@@ -613,13 +613,13 @@
     </mote>    <mote>
       <interface_config>
         org.contikios.cooja.interfaces.Position
-        <x>1</x>
-        <y>1</y>
+        <x>-2.5</x>
+        <y>2.5</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-        <id>0-0</id>
+        <id>24</id>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiRadio
@@ -633,13 +633,13 @@
     </mote>    <mote>
       <interface_config>
         org.contikios.cooja.interfaces.Position
-        <x>1</x>
-        <y>1</y>
+        <x>2.5</x>
+        <y>-2.5</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-        <id>0-1</id>
+        <id>25</id>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiRadio
@@ -653,13 +653,13 @@
     </mote>    <mote>
       <interface_config>
         org.contikios.cooja.interfaces.Position
-        <x>1</x>
-        <y>1</y>
+        <x>-2.5</x>
+        <y>-2.5</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-        <id>0-2</id>
+        <id>26</id>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiRadio
@@ -673,13 +673,13 @@
     </mote>    <mote>
       <interface_config>
         org.contikios.cooja.interfaces.Position
-        <x>1</x>
-        <y>1</y>
+        <x>-2.5</x>
+        <y>-2.5</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-        <id>1-0</id>
+        <id>27</id>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiRadio
@@ -693,13 +693,13 @@
     </mote>    <mote>
       <interface_config>
         org.contikios.cooja.interfaces.Position
-        <x>1</x>
-        <y>1</y>
+        <x>2.5</x>
+        <y>-7.5</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-        <id>1-1</id>
+        <id>28</id>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiRadio
@@ -713,13 +713,13 @@
     </mote>    <mote>
       <interface_config>
         org.contikios.cooja.interfaces.Position
-        <x>1</x>
-        <y>1</y>
+        <x>-2.5</x>
+        <y>-7.5</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-        <id>1-2</id>
+        <id>29</id>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiRadio
@@ -733,13 +733,13 @@
     </mote>    <mote>
       <interface_config>
         org.contikios.cooja.interfaces.Position
-        <x>1</x>
-        <y>1</y>
+        <x>2.5</x>
+        <y>2.5</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-        <id>2-0</id>
+        <id>30</id>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiRadio
@@ -753,13 +753,13 @@
     </mote>    <mote>
       <interface_config>
         org.contikios.cooja.interfaces.Position
-        <x>1</x>
-        <y>1</y>
+        <x>7.5</x>
+        <y>-2.5</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-        <id>2-1</id>
+        <id>31</id>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiRadio
@@ -773,13 +773,13 @@
     </mote>    <mote>
       <interface_config>
         org.contikios.cooja.interfaces.Position
-        <x>1</x>
-        <y>1</y>
+        <x>2.5</x>
+        <y>-2.5</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-        <id>2-2</id>
+        <id>32</id>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiRadio
@@ -793,13 +793,13 @@
     </mote>    <mote>
       <interface_config>
         org.contikios.cooja.interfaces.Position
-        <x>1</x>
-        <y>1</y>
+        <x>2.5</x>
+        <y>-2.5</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-        <id>3-0</id>
+        <id>33</id>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiRadio
@@ -813,13 +813,13 @@
     </mote>    <mote>
       <interface_config>
         org.contikios.cooja.interfaces.Position
-        <x>1</x>
-        <y>1</y>
+        <x>7.5</x>
+        <y>-7.5</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-        <id>3-1</id>
+        <id>34</id>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiRadio
@@ -833,13 +833,13 @@
     </mote>    <mote>
       <interface_config>
         org.contikios.cooja.interfaces.Position
-        <x>1</x>
-        <y>1</y>
+        <x>2.5</x>
+        <y>-7.5</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-        <id>3-2</id>
+        <id>35</id>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiRadio
@@ -853,13 +853,13 @@
     </mote>    <mote>
       <interface_config>
         org.contikios.cooja.interfaces.Position
-        <x>1</x>
-        <y>1</y>
+        <x>7.5</x>
+        <y>2.5</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-        <id>4-0</id>
+        <id>36</id>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiRadio
@@ -873,13 +873,13 @@
     </mote>    <mote>
       <interface_config>
         org.contikios.cooja.interfaces.Position
-        <x>1</x>
-        <y>1</y>
+        <x>12.5</x>
+        <y>-2.5</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-        <id>4-1</id>
+        <id>37</id>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiRadio
@@ -893,13 +893,13 @@
     </mote>    <mote>
       <interface_config>
         org.contikios.cooja.interfaces.Position
-        <x>1</x>
-        <y>1</y>
+        <x>7.5</x>
+        <y>-2.5</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-        <id>4-2</id>
+        <id>38</id>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiRadio
@@ -913,13 +913,13 @@
     </mote>    <mote>
       <interface_config>
         org.contikios.cooja.interfaces.Position
-        <x>1</x>
-        <y>1</y>
+        <x>7.5</x>
+        <y>-2.5</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-        <id>5-0</id>
+        <id>39</id>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiRadio
@@ -933,13 +933,13 @@
     </mote>    <mote>
       <interface_config>
         org.contikios.cooja.interfaces.Position
-        <x>1</x>
-        <y>1</y>
+        <x>12.5</x>
+        <y>-7.5</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-        <id>5-1</id>
+        <id>40</id>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiRadio
@@ -953,13 +953,13 @@
     </mote>    <mote>
       <interface_config>
         org.contikios.cooja.interfaces.Position
-        <x>1</x>
-        <y>1</y>
+        <x>7.5</x>
+        <y>-7.5</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-        <id>5-2</id>
+        <id>41</id>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiRadio
@@ -973,13 +973,13 @@
     </mote>    <mote>
       <interface_config>
         org.contikios.cooja.interfaces.Position
-        <x>1</x>
-        <y>1</y>
+        <x>12.5</x>
+        <y>2.5</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-        <id>6-0</id>
+        <id>42</id>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiRadio
@@ -993,13 +993,13 @@
     </mote>    <mote>
       <interface_config>
         org.contikios.cooja.interfaces.Position
-        <x>1</x>
-        <y>1</y>
+        <x>17.5</x>
+        <y>-2.5</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-        <id>6-1</id>
+        <id>43</id>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiRadio
@@ -1013,13 +1013,13 @@
     </mote>    <mote>
       <interface_config>
         org.contikios.cooja.interfaces.Position
-        <x>1</x>
-        <y>1</y>
+        <x>12.5</x>
+        <y>-2.5</y>
         <z>0.0</z>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiMoteID
-        <id>6-2</id>
+        <id>44</id>
       </interface_config>
       <interface_config>
         org.contikios.cooja.contikimote.interfaces.ContikiRadio
