@@ -1,12 +1,19 @@
 import time
 import os
 
-ports = ["60001", "60003", "60005"]
-filePath = "./Makefile.embedded"
+filePath = "/home/user/project2stuff/contiki-ng-mw-2122/os/services/rpl-border-router/embedded/Makefile.embedded"
 lastPort = "PORT"
+portsFile = "/home/user/project2stuff/MTDS-Projects/SmartBuildings/scripts/config/ports.txt"
 dirPath = "/home/user/project2stuff/contiki-ng-mw-2122/examples/rpl-border-router"
-command = "make TARGET=cooja connect-router-cooja"
+command = "nohup make TARGET=cooja connect-router-cooja &>/dev/null &"
 sudoPassword = 'user'
+
+ports = ""
+
+f = open(portsFile, "r")
+ports = f.read()
+ports = ports.split("\n")
+print(ports)
 
 def replaceMakeFile(filePath, lastPort,port):
     f = open(filePath, "r")
@@ -23,12 +30,14 @@ def replaceMakeFile(filePath, lastPort,port):
 
     return lastPort
 
-os.system("cd " + dirPath)
+#os.system("cd " + dirPath)
+#os.system("pwd")
+
 for port in ports:
     lastPort = replaceMakeFile(filePath, lastPort, port)
 
     p = os.system('echo %s|sudo -S %s' % (sudoPassword, command))
-    os.system(command)
+    #os.system(command)
 
     print("Started border router on port: " + str(port))
 
