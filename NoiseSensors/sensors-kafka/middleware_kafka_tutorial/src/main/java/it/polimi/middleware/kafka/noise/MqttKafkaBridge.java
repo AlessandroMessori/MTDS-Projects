@@ -20,7 +20,7 @@ import org.apache.kafka.common.serialization.StringSerializer;
 public class MqttKafkaBridge implements MqttCallback {
 
     private static final String mqttTopic = "iot/native/launchpad/json";
-    private static final String mqttServerAddr = "tcp://[fd00::1]:1883";
+    private static final String mqttServerAddr = "tcp://192.168.1.12:1883";
 
     private static final String kafkaTopic = "raw_noise_readings";
     private static final String kafkaServerAddr = "localhost:9092";
