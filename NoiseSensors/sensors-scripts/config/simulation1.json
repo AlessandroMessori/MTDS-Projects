@@ -1,0 +1,14 @@
+[
+    {
+        "regionName": "Lombardia",
+        "virtualSensors": true
+    },
+    {
+        "regionName": "Piemonte",
+        "virtualSensors": true
+    },
+    {
+        "regionName": "Emilia-Romagna",
+        "virtualSensors": false
+    }
+]
