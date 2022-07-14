@@ -302,4 +302,53 @@
   </plugin>
 
 </simconf>
+<!--
+var config = new java.io.FileReader("/home/user/Desktop/data/simulation1.json")
+var b = new java.io.BufferedReader(config);
 
+var configStr = "";
+var line = b.readLine();
+
+while (line) {
+    configStr += line;
+    line = b.readLine();
+}
+
+b.close();
+
+var readingFiles = []
+var contikiRegions = JSON.parse(configStr)
+var sensorCounter = 0;
+
+for (var i=0; i<contikiRegions.length; i++) {
+    if (contikiRegions[i].virtualSensors) {
+       var regionName = contikiRegions[i].regionName;  
+       
+       var currentFR1 = new java.io.FileReader("/home/user/Desktop/Data/"+regionName+"/1.txt")
+       var file1 = new java.io.BufferedReader(currentFR1);
+       
+       var currentFR2 = new java.io.FileReader("/home/user/Desktop/Data/"+regionName+"/2.txt")
+       var file2 = new java.io.BufferedReader(currentFR2); 
+       
+       readingFiles.append(file1);
+       readingFiles.append(file2);
+       sensorCounter += 2;
+    } 
+}
+
+var counter = 0;
+var allm = sim.getMotes();
+var waitTime = 10000 / sensorCounter;
+
+while (true) {
+    
+  GENERATE_MSG(waitTime, "sleep"); //Wait 
+  YIELD_THEN_WAIT_UNTIL(msg.equals("sleep"));
+  
+  var currentIndex = counter % sensorCounter;
+  var currentLine = readingFiles[currentIndex].readLine();
+  
+  log.log(currentLine);
+  write(allm[currentIndex], currentLine);           
+  counter++;  
+} -->
