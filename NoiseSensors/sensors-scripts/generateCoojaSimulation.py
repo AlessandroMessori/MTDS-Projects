@@ -2,6 +2,7 @@ import json
 
 filePath = "./config/simulation1.json"
 templatePath = "./config/moteTemplate.csc"
+routerPath = "./config/router_listening.csc"
 simulationPath = "./config/simulationTemplate.csc"
 listening_router = "./config/router_listening.csc"
 #room_building = "./config/room_building.txt"
@@ -51,7 +52,7 @@ with open(filePath) as json_file:
     for region in enumerate(simConfig):
 
         # Add border routers
-        motes += generateMote(templatePath, str(idCounter),
+        motes += generateMote(routerPath, str(idCounter),
                                   regionCounter * regionDist, regionDist, "sky1")
         idCounter += 1
 

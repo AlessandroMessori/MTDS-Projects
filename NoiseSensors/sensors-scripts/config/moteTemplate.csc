@@ -38,7 +38,7 @@
 
       </interface_config>
 
-      <motetype_identifier>mtype409</motetype_identifier>
+      <motetype_identifier>M_TYPE</motetype_identifier>
 
     </mote>
 

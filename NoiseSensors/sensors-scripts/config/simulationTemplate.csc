@@ -324,15 +324,16 @@ for (var i=0; i<contikiRegions.length; i++) {
     if (contikiRegions[i].virtualSensors) {
        var regionName = contikiRegions[i].regionName;  
        
-       var currentFR1 = new java.io.FileReader("/home/user/Desktop/Data/"+regionName+"/1.txt")
+       var currentFR1 = new java.io.FileReader("/home/user/Desktop/data/"+regionName+"/1.csv")
        var file1 = new java.io.BufferedReader(currentFR1);
        
-       var currentFR2 = new java.io.FileReader("/home/user/Desktop/Data/"+regionName+"/2.txt")
+       var currentFR2 = new java.io.FileReader("/home/user/Desktop/data/"+regionName+"/2.csv")
        var file2 = new java.io.BufferedReader(currentFR2); 
        
-       readingFiles.append(file1);
-       readingFiles.append(file2);
-       sensorCounter += 2;
+       readingFiles.push(null);
+       readingFiles.push(file1);
+       readingFiles.push(file2);
+       sensorCounter += 3;
     } 
 }
 
@@ -345,10 +346,16 @@ while (true) {
   GENERATE_MSG(waitTime, "sleep"); //Wait 
   YIELD_THEN_WAIT_UNTIL(msg.equals("sleep"));
   
-  var currentIndex = counter % sensorCounter;
-  var currentLine = readingFiles[currentIndex].readLine();
   
-  log.log(currentLine);
-  write(allm[currentIndex], currentLine);           
-  counter++;  
-} -->
+  var currentIndex = counter % sensorCounter;
+  
+  if (readingFiles[currentIndex]) {
+      var currentLine = readingFiles[currentIndex].readLine();
+  
+      log.log(currentLine);
+      write(allm[currentIndex], currentLine);           
+      counter++;    
+  }
+  
+
+}-->

@@ -139,8 +139,9 @@
     </motetype>
 
     
+     <mote>
 
-    <mote>
+      <breakpoints />
 
       <interface_config>
 
@@ -156,32 +157,23 @@
 
       <interface_config>
 
-        org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+        org.contikios.cooja.mspmote.interfaces.MspClock
+
+        <deviation>1.0</deviation>
+
+      </interface_config>
+
+      <interface_config>
+
+        org.contikios.cooja.mspmote.interfaces.MspMoteID
 
         <id>1</id>
 
       </interface_config>
 
-      <interface_config>
-
-        org.contikios.cooja.contikimote.interfaces.ContikiRadio
-
-        <bitrate>250.0</bitrate>
-
-      </interface_config>
-
-      <interface_config>
-
-        org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
-
-        <eeprom>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==</eeprom>
-
-      </interface_config>
-
-      <motetype_identifier>mtype409</motetype_identifier>
+      <motetype_identifier>sky1</motetype_identifier>
 
     </mote>
-
 
     <mote>
 
@@ -224,6 +216,8 @@
       <motetype_identifier>mtype409</motetype_identifier>
 
     </mote>
+
+
 
 
     <mote>
@@ -269,7 +263,10 @@
     </mote>
 
 
-    <mote>
+
+     <mote>
+
+      <breakpoints />
 
       <interface_config>
 
@@ -285,32 +282,23 @@
 
       <interface_config>
 
-        org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+        org.contikios.cooja.mspmote.interfaces.MspClock
+
+        <deviation>1.0</deviation>
+
+      </interface_config>
+
+      <interface_config>
+
+        org.contikios.cooja.mspmote.interfaces.MspMoteID
 
         <id>4</id>
 
       </interface_config>
 
-      <interface_config>
-
-        org.contikios.cooja.contikimote.interfaces.ContikiRadio
-
-        <bitrate>250.0</bitrate>
-
-      </interface_config>
-
-      <interface_config>
-
-        org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
-
-        <eeprom>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==</eeprom>
-
-      </interface_config>
-
-      <motetype_identifier>mtype409</motetype_identifier>
+      <motetype_identifier>sky1</motetype_identifier>
 
     </mote>
-
 
     <mote>
 
@@ -353,6 +341,8 @@
       <motetype_identifier>mtype409</motetype_identifier>
 
     </mote>
+
+
 
 
     <mote>
@@ -398,7 +388,10 @@
     </mote>
 
 
-    <mote>
+
+     <mote>
+
+      <breakpoints />
 
       <interface_config>
 
@@ -414,32 +407,23 @@
 
       <interface_config>
 
-        org.contikios.cooja.contikimote.interfaces.ContikiMoteID
+        org.contikios.cooja.mspmote.interfaces.MspClock
+
+        <deviation>1.0</deviation>
+
+      </interface_config>
+
+      <interface_config>
+
+        org.contikios.cooja.mspmote.interfaces.MspMoteID
 
         <id>7</id>
 
       </interface_config>
 
-      <interface_config>
-
-        org.contikios.cooja.contikimote.interfaces.ContikiRadio
-
-        <bitrate>250.0</bitrate>
-
-      </interface_config>
-
-      <interface_config>
-
-        org.contikios.cooja.contikimote.interfaces.ContikiEEPROM
-
-        <eeprom>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==</eeprom>
-
-      </interface_config>
-
-      <motetype_identifier>mtype409</motetype_identifier>
+      <motetype_identifier>sky1</motetype_identifier>
 
     </mote>
-
 
     <mote>
 
@@ -484,6 +468,8 @@
     </mote>
 
 
+
+
     <mote>
 
       <interface_config>
@@ -525,6 +511,8 @@
       <motetype_identifier>mtype409</motetype_identifier>
 
     </mote>
+
+
 
 
 
@@ -689,4 +677,60 @@
   </plugin>
 
 </simconf>
+<!--
+var config = new java.io.FileReader("/home/user/Desktop/data/simulation1.json")
+var b = new java.io.BufferedReader(config);
 
+var configStr = "";
+var line = b.readLine();
+
+while (line) {
+    configStr += line;
+    line = b.readLine();
+}
+
+b.close();
+
+var readingFiles = []
+var contikiRegions = JSON.parse(configStr)
+var sensorCounter = 0;
+
+for (var i=0; i<contikiRegions.length; i++) {
+    if (contikiRegions[i].virtualSensors) {
+       var regionName = contikiRegions[i].regionName;  
+       
+       var currentFR1 = new java.io.FileReader("/home/user/Desktop/data/"+regionName+"/1.csv")
+       var file1 = new java.io.BufferedReader(currentFR1);
+       
+       var currentFR2 = new java.io.FileReader("/home/user/Desktop/data/"+regionName+"/2.csv")
+       var file2 = new java.io.BufferedReader(currentFR2); 
+       
+       readingFiles.push(null);
+       readingFiles.push(file1);
+       readingFiles.push(file2);
+       sensorCounter += 3;
+    } 
+}
+
+var counter = 0;
+var allm = sim.getMotes();
+var waitTime = 10000 / sensorCounter;
+
+while (true) {
+    
+  GENERATE_MSG(waitTime, "sleep"); //Wait 
+  YIELD_THEN_WAIT_UNTIL(msg.equals("sleep"));
+  
+  
+  var currentIndex = counter % sensorCounter;
+  
+  if (readingFiles[currentIndex]) {
+      var currentLine = readingFiles[currentIndex].readLine();
+  
+      log.log(currentLine);
+      write(allm[currentIndex], currentLine);           
+      counter++;    
+  }
+  
+
+}-->
