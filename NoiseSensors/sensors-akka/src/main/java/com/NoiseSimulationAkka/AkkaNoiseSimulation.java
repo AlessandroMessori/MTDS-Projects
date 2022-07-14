@@ -26,6 +26,7 @@ import java.util.concurrent.ThreadLocalRandom;
 //    noise of each square meter in the region with a temporal granularity of t (simulated) seconds
 
 public class AkkaNoiseSimulation {
+
   public static void main(String[] args) {
     final double maxNoiseLevelPeople = 60.0; //60 for a conversation
     final double minNoiseLevelPeople = 20.0; //20 lowest
@@ -66,8 +67,7 @@ public class AkkaNoiseSimulation {
     }
 
 
-    while (true) {
-
+   while(true) {
       for (ActorRef actorP : simulatedPersons.values() ) {
         actorP.tell(new RequestReadingMessage(posX, posY, timeStamp), simulatedSensor);
       }

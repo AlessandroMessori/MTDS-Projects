@@ -21,6 +21,8 @@ public class NoiseReadingMessage {
         return this.val;
     }
 
+    public double getTimestamp() { return this.timeStamp; }
+
     public double getPosX() { return this.posX; }
 
     public double getPosY() { return this.posY; }
