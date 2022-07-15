@@ -1,36 +1,15 @@
+  <plugin>
+    org.contikios.cooja.serialsocket.SerialSocketServer
+    <mote_arg>MOTE_INDEX</mote_arg>
+    <plugin_config>
+      <port>PORT_NUMBER</port>
+      <bound>true</bound>
+    </plugin_config>
+    <width>362</width>
+    <z>2</z>
+    <height>116</height>
+    <location_x>710</location_x>
+    <location_y>30</location_y>
+  </plugin>
 
-     <mote>
 
-      <breakpoints />
-
-      <interface_config>
-
-        org.contikios.cooja.interfaces.Position
-
-        <x>X_COORD</x>
-
-        <y>Y_COORD</y>
-
-        <z>0.0</z>
-
-      </interface_config>
-
-      <interface_config>
-
-        org.contikios.cooja.mspmote.interfaces.MspClock
-
-        <deviation>1.0</deviation>
-
-      </interface_config>
-
-      <interface_config>
-
-        org.contikios.cooja.mspmote.interfaces.MspMoteID
-
-        <id>MOTE_ID</id>
-
-      </interface_config>
-
-      <motetype_identifier>sky1</motetype_identifier>
-
-    </mote>

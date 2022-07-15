@@ -275,31 +275,7 @@
 
   </plugin>
 
-  <plugin>
-
-    org.contikios.cooja.serialsocket.SerialSocketServer
-
-    <mote_arg>0</mote_arg>
-
-    <plugin_config>
-
-      <port>60001</port>
-
-      <bound>true</bound>
-
-    </plugin_config>
-
-    <width>362</width>
-
-    <z>4</z>
-
-    <height>116</height>
-
-    <location_x>710</location_x>
-
-    <location_y>30</location_y>
-
-  </plugin>
+  <-- INSERT LISTENERS HERE -->
 
 </simconf>
 <!--

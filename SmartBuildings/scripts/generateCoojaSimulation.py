@@ -17,8 +17,8 @@ idCounter = 1
 y_hall = 4.0
 x_hall = 3.0
 buildingDist = 50
-buildingCounter = 1;
-roomCounter = 1;
+buildingCounter = 1
+roomCounter = 1
 
 
 SIDE = 5.0

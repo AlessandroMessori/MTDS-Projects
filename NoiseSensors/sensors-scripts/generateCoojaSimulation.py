@@ -2,11 +2,10 @@ import json
 
 filePath = "./config/simulation1.json"
 templatePath = "./config/moteTemplate.csc"
-routerPath = "./config/router_listening.csc"
+routerPath = "./config/routerTemplate.csc"
 simulationPath = "./config/simulationTemplate.csc"
 listening_router = "./config/router_listening.csc"
-#room_building = "./config/room_building.txt"
-#ports = "./config/ports.txt"
+ports = "./config/ports.txt"
 
 
 motes = ""
@@ -54,6 +53,10 @@ with open(filePath) as json_file:
         # Add border routers
         motes += generateMote(routerPath, str(idCounter),
                                   regionCounter * regionDist, regionDist, "sky1")
+
+        listeners += activateListeners(listening_router, idCounter, idCounter)
+        portsText += (str(idCounter + 60000) + "\n")
+
         idCounter += 1
 
         # Add senors in top left and bottom right corners
@@ -65,24 +68,21 @@ with open(filePath) as json_file:
                                   regionCounter * regionDist-sensorDist, regionDist-sensorDist, "mtype409")
         idCounter += 1
 
+
         regionCounter+=1
 
-    #portsText = portsText[:-1]
+    portsText = portsText[:-1]
 
-    #f = open(ports, "w")
-    #f.write(portsText)
-    #f.close()
-
-    #f = open(room_building, "w")
-    #f.write(room_building_string)
-    #f.close()
+    f = open(ports, "w")
+    f.write(portsText)
+    f.close()
 
     f = open(simulationPath, "r")
     fileText = f.read()
     f.close()
 
     fileText = fileText.replace("<---INSERT MOTES HERE-->", motes)
-    #fileText = fileText.replace("<---LISTENERS--->", listeners)
+    fileText = fileText.replace("<-- INSERT LISTENERS HERE -->", listeners)
 
     f = open("./test.csc", "w")
     f.write(fileText)
