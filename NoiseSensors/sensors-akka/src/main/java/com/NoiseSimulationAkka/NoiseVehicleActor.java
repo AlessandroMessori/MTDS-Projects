@@ -3,12 +3,12 @@ package com.NoiseSimulationAkka;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class NoiseVehicleActor extends NoiseObject {
-    int posX;
-    int posY;
-    int actionArea = 10;
+    double posX;
+    double posY;
+    int actionArea = 100;
     double speedObject;
 
-    public NoiseVehicleActor(int posX, int posY, double speedObject) {
+    public NoiseVehicleActor(double posX, double posY, double speedObject) {
         this.posX = posX;
         this.posY = posY;
         this.speedObject = speedObject;
@@ -28,7 +28,7 @@ public class NoiseVehicleActor extends NoiseObject {
         this.moveObject();
     }
 
-    boolean inSensorArea(int posXS, int posYS) {
+    boolean inSensorArea(double posXS, double posYS) {
         // check if the object is in the area of the sensor
         if( posYS + actionArea > posYS && posYS - actionArea < posYS &&
             posXS + actionArea > posXS && posXS - actionArea < posXS)
