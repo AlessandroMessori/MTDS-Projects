@@ -78,7 +78,7 @@
                     <arguments>
                         <argument>-classpath</argument>
                         <classpath />
-                        <argument>com.NoiseSensors.NoiseSensors</argument>
+                        <argument>com.NoiseSimulationAkka.AkkaNoiseSimulation</argument>
                     </arguments>
                 </configuration>
             </plugin>

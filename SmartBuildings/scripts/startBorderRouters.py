@@ -13,6 +13,7 @@ ports = ""
 f = open(portsFile, "r")
 ports = f.read()
 ports = ports.split("\n")
+ports = list(filter(lambda x:x != "",ports))
 print(ports)
 
 def replaceMakeFile(filePath, lastPort,port):

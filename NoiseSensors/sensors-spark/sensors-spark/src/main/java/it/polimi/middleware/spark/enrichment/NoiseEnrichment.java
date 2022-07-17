@@ -61,18 +61,21 @@ public class NoiseEnrichment {
                                 .appName("NoiseEnrichment")
                                 .getOrCreate();
 
+
+                                
                 spark.udf().register("GEO_DISTANCE", distanceFromGEO(), DataTypes.DoubleType);
 
                 Dataset<Row> poiDataset = spark
                                 .read()
                                 .option("header", "true")
-                                .csv("/home/alle/Repos/MTDS-Projects/NoiseSensors/sensors-spark/sensors-spark/files/poi_italy_copy.csv");
+                                .csv("/home/alle/Repos/MTDS-Projects/NoiseSensors/sensors-spark/sensors-spark/files/poi_italy.csv");
 
                 poiDataset.createOrReplaceTempView("Poi");
 
                 Dataset<Row> noiseStream = spark
                                 .readStream()
                                 .format("kafka")
+                                .option("failOnDataLoss", "false")
                                 .option("kafka.bootstrap.servers", "localhost:9092")
                                 .option("subscribe", "clean_noise_readings")
                                 .load();
@@ -100,12 +103,13 @@ public class NoiseEnrichment {
                 StreamingQuery query = spark
                                 .sql("SELECT * FROM MinDist AS MD JOIN NoisePOI AS NP ON MD.`Seq #` =  NP.`Seq #` AND MD.`min(Dist)` = NP.Dist ")
                                 .writeStream()
-                                .outputMode("Append")
                                 .format("csv")
-                                .option("format", "append")
-                                .option("path", "/home/alle/Data/")
-                                .option("checkpointLocation", "/home/alle/checkpoints2")
+                                //.trigger("10 seconds")
+                                .option("checkpointLocation", "/home/")
+                                .option("path", "/home/checkpointsSpark")
+                                .outputMode("append")
                                 .start();
+
 
                 query.awaitTermination();
 

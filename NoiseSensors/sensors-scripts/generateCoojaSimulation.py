@@ -54,7 +54,7 @@ with open(filePath) as json_file:
         motes += generateMote(routerPath, str(idCounter),
                                   regionCounter * regionDist, regionDist, "sky1")
 
-        listeners += activateListeners(listening_router, idCounter, idCounter)
+        listeners += activateListeners(listening_router, idCounter-1, idCounter)
         portsText += (str(idCounter + 60000) + "\n")
 
         idCounter += 1

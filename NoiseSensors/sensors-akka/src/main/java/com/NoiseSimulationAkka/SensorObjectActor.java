@@ -17,7 +17,7 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 public class SensorObjectActor extends AbstractActor {
-    private static final String simulationTopic = "noiseSimulation";
+    private static final String simulationTopic = "raw_noise_readings";
 
     private static final int numMessages = 100;
     private static final int waitBetweenMsgs = 500;
