@@ -5,6 +5,7 @@ import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
 import org.apache.kafka.common.serialization.StringSerializer;
+import org.json.JSONObject;
 
 import java.util.*;
 import java.util.concurrent.ExecutionException;
@@ -25,8 +26,9 @@ public class SensorObjectActor extends AbstractActor {
 
     private static final String serverAddr = "localhost:9092";
 
-    private int posX;
-    private int posY;
+    private final int ID;
+    private double posX;
+    private double posY;
 
     private double maxNoiseLevelPeople;
     private double minNoiseLevelPeople;
@@ -39,9 +41,10 @@ public class SensorObjectActor extends AbstractActor {
     private final int queueSize;
 
 
-    public SensorObjectActor(int posX, int posY, int queueSize,
+    public SensorObjectActor(double posX, double posY, int queueSize,
                              double maxNoiseLevelPeople, double minNoiseLevelPeople,
-                             double maxNoiseLevelVehicles, double minNoiseLevelVehicles) {
+                             double maxNoiseLevelVehicles, double minNoiseLevelVehicles,
+                             int ID) {
         this.posX = posX;
         this.posY = posY;
         this.readings = new LinkedList<NoiseReadingMessage>();
@@ -51,6 +54,7 @@ public class SensorObjectActor extends AbstractActor {
         this.minNoiseLevelPeople = minNoiseLevelPeople;
         this.maxNoiseLevelVehicles = maxNoiseLevelVehicles;
         this.minNoiseLevelVehicles = minNoiseLevelVehicles;
+        this.ID = ID;
     }
 
     @Override
@@ -88,16 +92,16 @@ public class SensorObjectActor extends AbstractActor {
 
         final String topic = simulationTopic;
         final String key = "Key" + reading.getTimestamp();
-        //the value should be the temp posx posy
-        final String value = "Value" + "," + this.getMovingAgv() + "," + reading.getPosX() + "," + reading.getPosY();
+        final String jsonString = new JSONObject()
+                .put("sensorID", ID)
+                .put("lat", posX)
+                .put("lon", posY)
+                .put("noiseVa", this.getMovingAgv())
+                .put("timestamp", reading.getTimestamp())
+                .put("averageExceeded", this.threshold ? 1 : 0)
+                .toString();
 
-        System.out.println(
-                "Topic: " + topic +
-                        "\tKey: " + key +
-                        "\tValue: " + value
-        );
-
-        final ProducerRecord<String, String> record = new ProducerRecord<>(topic, key, value);
+        final ProducerRecord<String, String> record = new ProducerRecord<>(topic, key, jsonString);
         final Future<RecordMetadata> future = producer.send(record);
 
         if (waitAck) {
@@ -120,7 +124,13 @@ public class SensorObjectActor extends AbstractActor {
         //System.out.println("Threshold " + (this.threshold ? "" : "Not ")  + "Exceeded \n");
 
         producer.close();
+        this.moveSensor();
 
+    }
+
+    private void moveSensor() {
+        this.posX += 0.0002;
+        this.posY -= 0.0001;
     }
 
     double getMovingAgv() {
