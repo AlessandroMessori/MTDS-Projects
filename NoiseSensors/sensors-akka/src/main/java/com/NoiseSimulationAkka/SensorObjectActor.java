@@ -4,6 +4,7 @@ import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
 import org.apache.kafka.clients.producer.RecordMetadata;
+import org.apache.kafka.common.Node;
 import org.apache.kafka.common.serialization.StringSerializer;
 import org.json.JSONObject;
 
@@ -25,7 +26,8 @@ public class SensorObjectActor extends AbstractActor {
     private static final boolean waitAck = true;
 
     private static final String serverAddr = "localhost:9092";
-
+    //a higher number 1-1000 random order number
+    //also the timestamp to be diff
     private final int ID;
     private double posX;
     private double posY;
@@ -90,16 +92,23 @@ public class SensorObjectActor extends AbstractActor {
 
         //also modify for the threshold
 
+        String allVal = "[";
+        for(NoiseReadingMessage read: readings) {
+            allVal += read.toStringVal() + " ";
+        }
+        allVal += "]";
+
         final String topic = simulationTopic;
         final String key = "Key" + reading.getTimestamp();
         final String jsonString = new JSONObject()
                 .put("sensorID", ID)
                 .put("lat", posX)
                 .put("lon", posY)
-                .put("noiseVa", this.getMovingAgv())
+                .put("noiseVa", this.threshold ? allVal : this.getMovingAgv())
                 .put("timestamp", reading.getTimestamp())
                 .put("averageExceeded", this.threshold ? 1 : 0)
                 .toString();
+        System.out.println(jsonString);
 
         final ProducerRecord<String, String> record = new ProducerRecord<>(topic, key, jsonString);
         final Future<RecordMetadata> future = producer.send(record);
@@ -142,6 +151,7 @@ public class SensorObjectActor extends AbstractActor {
                 .mapToDouble(NoiseReadingMessage::getVal)
                 .reduce(0, (subtotal, element) -> subtotal + element / size);
     }
+
 
     static Props props() {
         return Props.create(SensorObjectActor.class);

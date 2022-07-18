@@ -6,7 +6,7 @@ public class NoisePersonActor extends NoiseObject{
     double posX;
     double posY;
     double speedObject;
-    int actionArea = 100;
+    int actionArea = 400;
 
     public NoisePersonActor(double posX, double posY, double speedObject) {
         this.posX = posX;
@@ -35,15 +35,12 @@ public class NoisePersonActor extends NoiseObject{
                 (this.posX + this.actionArea) > posXS && (this.posX - this.actionArea) < posXS) {
             return true;
         }
-        /*TODO 0: check the sensor to be in the area -> modify actionArea to be larger */
-        System.out.println("Not in area");
+        //System.out.println("Not in area");
         return false;
     }
 
     @Override
-    /*Move the object randomly in the area
-    * TODO 1: make sure it doesn't leave the area or remove object if so + add the limits to the object
-    * TODO 2: move the object on both axes*/
+    /*Move the object randomly in the area*/
     public void moveObject() {
         this.posY += speedObject;
     }
