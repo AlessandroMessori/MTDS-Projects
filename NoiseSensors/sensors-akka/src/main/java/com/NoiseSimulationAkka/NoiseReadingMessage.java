@@ -35,4 +35,9 @@ public class NoiseReadingMessage {
         return "T " + this.timeStamp + " --> " + formattedString + "( " + this.posX + "," + this.posY + " );";
     }
 
+    public String toStringVal(){
+        String formattedString = String.format("%.02f", val);
+        return formattedString;
+    }
+
 }
