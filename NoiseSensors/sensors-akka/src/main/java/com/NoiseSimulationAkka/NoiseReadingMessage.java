@@ -1,5 +1,10 @@
 package com.NoiseSimulationAkka;
 
+
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
+
 public class NoiseReadingMessage {
 
     private double val;
@@ -7,6 +12,8 @@ public class NoiseReadingMessage {
     private double posY;
     private int objType;
     private int timeStamp;
+
+    private static DecimalFormat df = new DecimalFormat("0.00");
 
     public NoiseReadingMessage(double val, double posX, double posY, int objTtype, int timeStamp) {
         this.val = val;
@@ -36,8 +43,8 @@ public class NoiseReadingMessage {
     }
 
     public String toStringVal(){
-        String formattedString = String.format("%.02f", val);
-        return formattedString;
+        //String formattedString = String.format("%.02f", val);
+        return df.format(getVal()) + "";
     }
 
 }

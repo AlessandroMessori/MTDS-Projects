@@ -104,7 +104,7 @@ public class SensorObjectActor extends AbstractActor {
                 .put("sensorID", ID)
                 .put("lat", posX)
                 .put("lon", posY)
-                .put("noiseVa", this.threshold ? allVal : this.getMovingAgv())
+                .put("noiseVal", this.threshold ? allVal : this.getMovingAgv())
                 .put("timestamp", reading.getTimestamp())
                 .put("averageExceeded", this.threshold ? 1 : 0)
                 .toString();
