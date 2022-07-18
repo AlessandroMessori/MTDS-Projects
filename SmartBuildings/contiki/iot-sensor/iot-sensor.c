@@ -565,13 +565,10 @@ publish(void)
 
   len = snprintf(buf_ptr, remaining,
                  "{"
-                 "\"d\":{"
-                 "\"myName\":\"%s\","
-                 "\"Seq #\":%d,"
-                 "\"Uptime (sec)\":%lu,"
-                 "\"Hum (kg/m^3)\":%f,"
-                 "\"Temp (C)\":%f",
-                 "native", seq_nr_value,clock_seconds(), hum, temp); 
+                 "\"Uptime\":%lu,"
+                 "\"Hum\":%f,"
+                 "\"Temp\":%f",
+                 clock_seconds(), hum, temp);  
              
   if(len < 0 || len >= remaining) {
     LOG_ERR("Buffer too short. Have %d, need %d + \\0\n", remaining, len);
