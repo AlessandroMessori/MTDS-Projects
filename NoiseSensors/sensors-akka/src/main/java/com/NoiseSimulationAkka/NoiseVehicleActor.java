@@ -5,7 +5,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class NoiseVehicleActor extends NoiseObject {
     double posX;
     double posY;
-    int actionArea = 100;
+    int actionArea = 500;
     double speedObject;
 
     public NoiseVehicleActor(double posX, double posY, double speedObject) {

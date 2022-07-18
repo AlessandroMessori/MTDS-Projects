@@ -55,6 +55,7 @@
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>
+#include <locale.h>
 /*---------------------------------------------------------------------------*/
 /*
  * Publish to a local MQTT broker (e.g. mosquitto) running on
@@ -751,6 +752,7 @@ PROCESS_THREAD(mqtt_demo_process, ev, data)
 
   init_config();
   update_config();
+  setlocale(LC_NUMERIC, "en_US.utf8");
 
   /* Main loop */
   while(1) {

@@ -55,11 +55,11 @@ public class AkkaNoiseSimulation {
     final ActorSystem sys = ActorSystem.create("System");
 
     final ActorRef simulatedSensor1 = sys.actorOf(Props.create(SensorObjectActor.class, posX1, posY1, QUEUE_SIZE,
-            maxNoiseLevelPeople, minNoiseLevelPeople, maxNoiseLevelVehicles, minNoiseLevelVehicles, 1), "simulatedSensor1");
+            maxNoiseLevelPeople, minNoiseLevelPeople, maxNoiseLevelVehicles, minNoiseLevelVehicles, 564), "simulatedSensor1");
     final ActorRef simulatedSensor2 = sys.actorOf(Props.create(SensorObjectActor.class, posX2, posY2, QUEUE_SIZE,
-          maxNoiseLevelPeople, minNoiseLevelPeople, maxNoiseLevelVehicles, minNoiseLevelVehicles, 2), "simulatedSensor2");
+          maxNoiseLevelPeople, minNoiseLevelPeople, maxNoiseLevelVehicles, minNoiseLevelVehicles, 278), "simulatedSensor2");
     final ActorRef simulatedSensor3 = sys.actorOf(Props.create(SensorObjectActor.class, posX3, posY3, QUEUE_SIZE,
-          maxNoiseLevelPeople, minNoiseLevelPeople, maxNoiseLevelVehicles, minNoiseLevelVehicles, 3), "simulatedSensor3");
+          maxNoiseLevelPeople, minNoiseLevelPeople, maxNoiseLevelVehicles, minNoiseLevelVehicles, 729), "simulatedSensor3");
     HashMap<String, ActorRef> simulatedPersons = new HashMap<String, ActorRef>();
     HashMap<String, ActorRef> simulatedVehicles = new HashMap<String, ActorRef>();
 
@@ -107,7 +107,7 @@ public class AkkaNoiseSimulation {
         e.printStackTrace();
       }
 
-      timeStamp++;
+      timeStamp += 10;
     }
   }
 }
