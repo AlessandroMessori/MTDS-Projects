@@ -68,7 +68,7 @@
                     <arguments>
                         <argument>-classpath</argument>
                         <classpath />
-                        <argument>it.polimi.middleware.spark.enrichment.NoiseCleaning</argument>
+                        <argument>it.polimi.middleware.spark.cleaning.NoiseCleaning</argument>
                     </arguments>
                 </configuration>
             </plugin>

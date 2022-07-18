@@ -46,12 +46,13 @@ public class NoiseEnrichment {
                 LogUtils.setLogLevel();
 
                 StructType readingSchema = DataTypes.createStructType(new StructField[] {
-                                DataTypes.createStructField("Seq #", DataTypes.IntegerType, true),
-                                DataTypes.createStructField("X", DataTypes.IntegerType, true),
-                                DataTypes.createStructField("Y", DataTypes.IntegerType, true),
-                                DataTypes.createStructField("Average Exceeded", DataTypes.IntegerType, true),
-                                DataTypes.createStructField("Noise Level (dB)", DataTypes.StringType, true),
-                });
+                        DataTypes.createStructField("sensorID", DataTypes.IntegerType, true),
+                        DataTypes.createStructField("lat", DataTypes.DoubleType, true),
+                        DataTypes.createStructField("lon", DataTypes.DoubleType, true),
+                        DataTypes.createStructField("timestamp", DataTypes.IntegerType, true),
+                        DataTypes.createStructField("averageExceeded", DataTypes.IntegerType, true),
+                        DataTypes.createStructField("noiseVal", DataTypes.StringType, true),
+        });
 
                 final String master = args.length > 0 ? args[0] : "local[2]";
 
@@ -77,7 +78,7 @@ public class NoiseEnrichment {
                                 .format("kafka")
                                 .option("failOnDataLoss", "false")
                                 .option("kafka.bootstrap.servers", "localhost:9092")
-                                .option("subscribe", "clean_noise_readings")
+                                .option("subscribe", "raw_noise_readings")
                                 .load();
 
                 noiseStream = noiseStream.withColumn("strVal", noiseStream.col("value").cast("String"));
@@ -89,19 +90,19 @@ public class NoiseEnrichment {
 
                 // Query
                 Dataset<Row> noisePOI = spark
-                                .sql("SELECT N.reading.`Seq #`, N.timestamp, N.reading.X, N.reading.Y, N.reading.`Average Exceeded`, N.reading.`Noise Level (dB)`, P.name, P.region,  GEO_DISTANCE(DOUBLE(N.reading.X), DOUBLE(P.Latitude), DOUBLE(N.reading.Y), DOUBLE(P.Longitude)) AS Dist FROM CleanNoise AS N CROSS JOIN Poi AS P");
+                                .sql("SELECT N.reading.sensorID, N.timestamp, N.reading.lat, N.reading.lon, N.reading.averageExceeded, N.reading.noiseVal, P.name, P.region,  GEO_DISTANCE(N.reading.lat, DOUBLE(P.Latitude), N.reading.lon, DOUBLE(P.Longitude)) AS Dist FROM CleanNoise AS N CROSS JOIN Poi AS P");
 
                 noisePOI
                                 .withWatermark("timestamp", "10 seconds")
                                 .createOrReplaceTempView("NoisePOI");
 
                 Dataset<Row> minDist = spark
-                                .sql("SELECT `Seq #`, MIN(Dist) FROM NoisePOI GROUP BY `Seq #`, timestamp");
+                                .sql("SELECT sensorID, MIN(Dist) FROM NoisePOI GROUP BY sensorID, timestamp");
 
                 minDist.createOrReplaceTempView("MinDist");
 
                 StreamingQuery query = spark
-                                .sql("SELECT * FROM MinDist AS MD JOIN NoisePOI AS NP ON MD.`Seq #` =  NP.`Seq #` AND MD.`min(Dist)` = NP.Dist ")
+                                .sql("SELECT * FROM MinDist AS MD JOIN NoisePOI AS NP ON MD.sensorID =  NP.sensorID AND MD.`min(Dist)` = NP.Dist ")
                                 .writeStream()
                                 .format("csv")
                                 //.trigger("10 seconds")
@@ -109,6 +110,14 @@ public class NoiseEnrichment {
                                 .option("path", "/home/checkpointsSpark")
                                 .outputMode("append")
                                 .start();
+
+                /*StreamingQuery query =spark
+                .sql("SELECT N.reading.sensorID, N.timestamp, N.reading.lat, N.reading.lon, N.reading.averageExceeded, N.reading.noiseVal, P.name, P.region, P.latitude, P.longitude  FROM CleanNoise AS N CROSS JOIN Poi AS P")
+                .writeStream()
+                .format("console")
+                .option("checkpointLocation", "/home/checks")
+                .outputMode("append")
+                .start();*/
 
 
                 query.awaitTermination();

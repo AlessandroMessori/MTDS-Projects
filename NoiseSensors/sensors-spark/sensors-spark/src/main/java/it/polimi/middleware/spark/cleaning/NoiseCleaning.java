@@ -19,11 +19,11 @@ public class NoiseCleaning {
 
                 StructType readingSchema = DataTypes.createStructType(new StructField[] {
                                 DataTypes.createStructField("sensorID", DataTypes.IntegerType, true),
-                                DataTypes.createStructField("lat", DataTypes.IntegerType, true),
-                                DataTypes.createStructField("lon", DataTypes.IntegerType, true),
+                                DataTypes.createStructField("lat", DataTypes.DoubleType, true),
+                                DataTypes.createStructField("lon", DataTypes.DoubleType, true),
                                 DataTypes.createStructField("timestamp", DataTypes.IntegerType, true),
                                 DataTypes.createStructField("averageExceeded", DataTypes.IntegerType, true),
-                                DataTypes.createStructField("noiseVa", DataTypes.StringType, true),
+                                DataTypes.createStructField("noiseVal", DataTypes.StringType, true),
                 });
 
                 final String master = args.length > 0 ? args[0] : "local[2]";
@@ -51,7 +51,7 @@ public class NoiseCleaning {
 
                 // Query
                 StreamingQuery query = spark
-                                .sql("SELECT reading.timestamp, reading.sensorID,reading.lat, reading.lon, reading.averageExceeded, reading.noiseVa FROM RawNoise WHERE ((reading.averageExceeded = 0 and reading.noiseVa > 0) or (reading.averageExceeded = 1 and reading.noiseVa NOT REGEXP '-'))")
+                                .sql("SELECT reading.timestamp, reading.sensorID,reading.lat, reading.lon, reading.averageExceeded, reading.noiseVal FROM RawNoise WHERE ((reading.averageExceeded = 0 and reading.noiseVal > 0) or (reading.averageExceeded = 1 and reading.noiseVal NOT REGEXP '-'))")
                                 .select(to_json(
                                                 struct(
                                                         "timestamp",
@@ -59,7 +59,7 @@ public class NoiseCleaning {
                                                         "lat",
                                                         "lon",
                                                         "averageExceeded",
-                                                        "noiseVa"))
+                                                        "noiseVal"))
                                                 .alias("value"))
                                 .writeStream()
                                 .format("kafka")
