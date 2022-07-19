@@ -98,12 +98,11 @@ public class NoiseEnrichment {
 
                 StreamingQuery query = spark
                                 .sql("SELECT * FROM MinDist AS MD JOIN NoisePOI AS NP ON MD.sensorID =  NP.sensorID AND MD.seqNUM = NP.seqNUM AND MD.`min(Dist)` = NP.Dist ")
-                                //.sql("SELECT * FROM NoisePOI")
                                 .writeStream()
                                 .format("Console")
                                 // .trigger("10 seconds")
-                                .option("checkpointLocation", "/home/checks3")
-                                // .option("path", "/home/sensorPOI")
+                                .option("checkpointLocation", "/home/checks4")
+                                .option("path", "/home/sensorPOI")
                                 .outputMode("append")
                                 .start();
 
