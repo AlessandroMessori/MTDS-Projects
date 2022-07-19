@@ -20,25 +20,22 @@ public class NoiseEnrichment {
                 return deg * (Math.PI / 180);
         }
 
-        private static UDF4<Double,Double,Double,Double,Double> distanceFromGEO()
-        {
-          return ( lat1, lon1, lat2, lon2) -> {
-                // Code taken by Stack Overflow
+        private static UDF4<Double, Double, Double, Double, Double> distanceFromGEO() {
+                return (lat1, lon1, lat2, lon2) -> {
+                        // Code taken by Stack Overflow
 
-                int R = 6371; // Radius of the earth in km
-                double dLat = deg2rad(lat2-lat1);  // deg2rad below
-                double dLon = deg2rad(lon2-lon1); 
+                        int R = 6371; // Radius of the earth in km
+                        double dLat = deg2rad(lat2 - lat1); // deg2rad below
+                        double dLon = deg2rad(lon2 - lon1);
 
-                double a = 
-                  Math.sin(dLat/2) * Math.sin(dLat/2) +
-                  Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * 
-                  Math.sin(dLon/2) * Math.sin(dLon/2)
-                  ; 
+                        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                                        Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+                                                        Math.sin(dLon / 2) * Math.sin(dLon / 2);
 
-                double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-                double d = R * c; // Distance in km
-                return d;
-          };
+                        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+                        double d = R * c; // Distance in km
+                        return d;
+                };
 
         }
 
@@ -46,13 +43,13 @@ public class NoiseEnrichment {
                 LogUtils.setLogLevel();
 
                 StructType readingSchema = DataTypes.createStructType(new StructField[] {
-                        DataTypes.createStructField("sensorID", DataTypes.IntegerType, true),
-                        DataTypes.createStructField("lat", DataTypes.DoubleType, true),
-                        DataTypes.createStructField("lon", DataTypes.DoubleType, true),
-                        DataTypes.createStructField("timestamp", DataTypes.IntegerType, true),
-                        DataTypes.createStructField("averageExceeded", DataTypes.IntegerType, true),
-                        DataTypes.createStructField("noiseVal", DataTypes.StringType, true),
-        });
+                                DataTypes.createStructField("sensorID", DataTypes.IntegerType, true),
+                                DataTypes.createStructField("lat", DataTypes.DoubleType, true),
+                                DataTypes.createStructField("lon", DataTypes.DoubleType, true),
+                                DataTypes.createStructField("timestamp", DataTypes.IntegerType, true),
+                                DataTypes.createStructField("averageExceeded", DataTypes.IntegerType, true),
+                                DataTypes.createStructField("noiseVal", DataTypes.StringType, true),
+                });
 
                 final String master = args.length > 0 ? args[0] : "local[2]";
 
@@ -62,14 +59,12 @@ public class NoiseEnrichment {
                                 .appName("NoiseEnrichment")
                                 .getOrCreate();
 
-
-                                
                 spark.udf().register("GEO_DISTANCE", distanceFromGEO(), DataTypes.DoubleType);
 
                 Dataset<Row> poiDataset = spark
                                 .read()
                                 .option("header", "true")
-                                .csv("/home/alle/Repos/MTDS-Projects/NoiseSensors/sensors-spark/sensors-spark/files/poi_italy.csv");
+                                .csv("/home/alle/Repos/MTDS-Projects/NoiseSensors/sensors-spark/sensors-spark/files/poi_small.csv");
 
                 poiDataset.createOrReplaceTempView("Poi");
 
@@ -78,7 +73,7 @@ public class NoiseEnrichment {
                                 .format("kafka")
                                 .option("failOnDataLoss", "false")
                                 .option("kafka.bootstrap.servers", "localhost:9092")
-                                .option("subscribe", "raw_noise_readings")
+                                .option("subscribe", "clean_noise_readings")
                                 .load();
 
                 noiseStream = noiseStream.withColumn("strVal", noiseStream.col("value").cast("String"));
@@ -90,35 +85,27 @@ public class NoiseEnrichment {
 
                 // Query
                 Dataset<Row> noisePOI = spark
-                                .sql("SELECT N.reading.sensorID, N.timestamp, N.reading.lat, N.reading.lon, N.reading.averageExceeded, N.reading.noiseVal, P.name, P.region,  GEO_DISTANCE(N.reading.lat, DOUBLE(P.Latitude), N.reading.lon, DOUBLE(P.Longitude)) AS Dist FROM CleanNoise AS N CROSS JOIN Poi AS P");
+                                .sql("SELECT N.reading.sensorID, N.timestamp, N.reading.timestamp AS seqNUM, N.reading.lat, N.reading.lon, N.reading.averageExceeded, N.reading.noiseVal, P.name, P.region,  SQRT(  POWER(ROUND(N.reading.lat,2) - DOUBLE(P.Latitude), 2) +  POWER(ROUND(N.reading.lon,2) - DOUBLE(P.Longitude),2) ) AS Dist FROM CleanNoise AS N CROSS JOIN Poi AS P");
 
                 noisePOI
-                                .withWatermark("timestamp", "10 seconds")
+                                .withWatermark("timestamp", "5 seconds")
                                 .createOrReplaceTempView("NoisePOI");
 
                 Dataset<Row> minDist = spark
-                                .sql("SELECT sensorID, MIN(Dist) FROM NoisePOI GROUP BY sensorID, timestamp");
+                                .sql("SELECT sensorID, seqNUM, MIN(Dist) FROM NoisePOI GROUP BY sensorID, seqNUM, timestamp");
 
                 minDist.createOrReplaceTempView("MinDist");
 
                 StreamingQuery query = spark
-                                .sql("SELECT * FROM MinDist AS MD JOIN NoisePOI AS NP ON MD.sensorID =  NP.sensorID AND MD.`min(Dist)` = NP.Dist ")
+                                .sql("SELECT * FROM MinDist AS MD JOIN NoisePOI AS NP ON MD.sensorID =  NP.sensorID AND MD.seqNUM = NP.seqNUM AND MD.`min(Dist)` = NP.Dist ")
+                                //.sql("SELECT * FROM NoisePOI")
                                 .writeStream()
-                                .format("csv")
-                                //.trigger("10 seconds")
-                                .option("checkpointLocation", "/home/")
-                                .option("path", "/home/checkpointsSpark")
+                                .format("Console")
+                                // .trigger("10 seconds")
+                                .option("checkpointLocation", "/home/checks3")
+                                // .option("path", "/home/sensorPOI")
                                 .outputMode("append")
                                 .start();
-
-                /*StreamingQuery query =spark
-                .sql("SELECT N.reading.sensorID, N.timestamp, N.reading.lat, N.reading.lon, N.reading.averageExceeded, N.reading.noiseVal, P.name, P.region, P.latitude, P.longitude  FROM CleanNoise AS N CROSS JOIN Poi AS P")
-                .writeStream()
-                .format("console")
-                .option("checkpointLocation", "/home/checks")
-                .outputMode("append")
-                .start();*/
-
 
                 query.awaitTermination();
 
