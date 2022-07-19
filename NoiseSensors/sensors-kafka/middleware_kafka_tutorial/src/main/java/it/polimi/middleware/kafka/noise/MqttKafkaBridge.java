@@ -26,8 +26,10 @@ public class MqttKafkaBridge implements MqttCallback {
     private static final String kafkaServerAddr = "localhost:9092";
     private static final boolean kafkaWaitAck = true;
 
+
     MqttClient client;
     KafkaProducer<String, String> kafkaProducer;
+    int keyCounter = 0;
 
     public MqttKafkaBridge() {
         final Properties props = new Properties();
@@ -66,7 +68,8 @@ public class MqttKafkaBridge implements MqttCallback {
         System.out.println(topic);
         System.out.println(message.toString());
 
-        final String key = "Key";
+        this.keyCounter++;
+        final String key = "Key-Contiki-" + this.keyCounter ;
         final String value = message.toString();
 
         final ProducerRecord<String, String> record = new ProducerRecord<>(kafkaTopic, key, value);
