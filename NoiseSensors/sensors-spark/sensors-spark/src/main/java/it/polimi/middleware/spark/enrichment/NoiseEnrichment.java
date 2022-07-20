@@ -19,10 +19,11 @@ public class NoiseEnrichment {
         private static double deg2rad(double deg) {
                 return deg * (Math.PI / 180);
         }
+        
 
+        // Function to compute the distance between two coordinates
         private static UDF4<Double, Double, Double, Double, Double> distanceFromGEO() {
                 return (lat1, lon1, lat2, lon2) -> {
-                        // Code taken by Stack Overflow
 
                         int R = 6371; // Radius of the earth in km
                         double dLat = deg2rad(lat2 - lat1); // deg2rad below
@@ -83,7 +84,7 @@ public class NoiseEnrichment {
 
                 noiseStream.createOrReplaceTempView("CleanNoise");
 
-                // Query
+                // Computes the distance between each reading and POI
                 Dataset<Row> noisePOI = spark
                                 .sql("SELECT N.reading.sensorID, N.timestamp, N.reading.timestamp AS seqNUM, N.reading.lat, N.reading.lon, N.reading.averageExceeded, N.reading.noiseVal, P.name, P.region,  
                                 GEO_DISTANCE(ROUND(N.reading.lat,2), DOUBLE(P.Latitude), ROUND(N.reading.lon,2) , DOUBLE(P.Longitude)) AS Dist FROM CleanNoise AS N CROSS JOIN Poi AS P");
@@ -92,11 +93,14 @@ public class NoiseEnrichment {
                                 .withWatermark("timestamp", "5 seconds")
                                 .createOrReplaceTempView("NoisePOI");
 
+
+                // Computes the nearest POI for each reading
                 Dataset<Row> minDist = spark
                                 .sql("SELECT sensorID, seqNUM, MIN(Dist) FROM NoisePOI GROUP BY sensorID, seqNUM, timestamp");
 
                 minDist.createOrReplaceTempView("MinDist");
 
+                
                 StreamingQuery query = spark
                                 .sql("SELECT * FROM MinDist AS MD JOIN NoisePOI AS NP ON MD.sensorID =  NP.sensorID AND MD.seqNUM = NP.seqNUM AND MD.`min(Dist)` = NP.Dist ")
                                 .writeStream()

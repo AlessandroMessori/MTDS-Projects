@@ -16,7 +16,7 @@ import java.util.concurrent.TimeoutException;
 public class NoiseCleaning {
         public static void main(String[] args) throws TimeoutException, StreamingQueryException {
                 LogUtils.setLogLevel();
-
+                
                 StructType readingSchema = DataTypes.createStructType(new StructField[] {
                                 DataTypes.createStructField("sensorID", DataTypes.IntegerType, true),
                                 DataTypes.createStructField("lat", DataTypes.DoubleType, true),
@@ -46,10 +46,10 @@ public class NoiseCleaning {
                 df = df.withColumn("reading", from_json(
                                 df.col("strVal"),
                                 readingSchema));
-
+                
                 df.createOrReplaceTempView("RawNoise");
 
-                // Query
+                // Discards the readings who are malformed or who have negative values
                 StreamingQuery query = spark
                                 .sql("SELECT reading.timestamp, reading.sensorID,reading.lat, reading.lon, reading.averageExceeded, reading.noiseVal FROM RawNoise WHERE ((reading.averageExceeded = 0 and reading.noiseVal > 0) or (reading.averageExceeded = 1 and reading.noiseVal NOT REGEXP '-'))")
                                 .select(to_json(

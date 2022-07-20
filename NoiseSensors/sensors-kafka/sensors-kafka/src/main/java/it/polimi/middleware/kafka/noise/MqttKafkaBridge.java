@@ -31,6 +31,7 @@ public class MqttKafkaBridge implements MqttCallback {
     KafkaProducer<String, String> kafkaProducer;
     int keyCounter = 0;
 
+    // Kafka Producer to read data from a MQTT border router and publish them to a Kafka Topic
     public MqttKafkaBridge() {
         final Properties props = new Properties();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaServerAddr);
@@ -63,6 +64,7 @@ public class MqttKafkaBridge implements MqttCallback {
         System.out.println("Lost Connection");
     }
 
+    // each time a new MQTT message arrives, send them to the Kafka Broker
     @Override
     public void messageArrived(String topic, MqttMessage message) throws Exception {
         System.out.println(topic);
