@@ -12,7 +12,7 @@ for building in buildings:
         for nroom in range(building["nRoomsPerFloor"]):
            currentTopic = "building_{}/floor_{}/room_{}/sensors".format(building["buildingId"], nfloor, nroom+1)
 
-           currentFlow = flows.replace("iot/native/launchpad/json", currentTopic)
+           currentFlow = flows.replace("iot/noise/json", currentTopic)
 
            with open("generatedFlows/"+currentTopic.replace("/","_")+".json", "w") as outfile:
             outfile.write(currentFlow)
