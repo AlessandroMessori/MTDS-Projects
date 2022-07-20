@@ -64,7 +64,7 @@ public class NoiseEnrichment {
                 Dataset<Row> poiDataset = spark
                                 .read()
                                 .option("header", "true")
-                                .csv("/home/alle/Repos/MTDS-Projects/NoiseSensors/sensors-spark/sensors-spark/files/poi_small.csv");
+                                .csv("/mnt/c/Users/simon/Documents/MTDS/MTDS-Projects/NoiseSensors/sensors-spark/sensors-spark/files/poi_small.csv");
 
                 poiDataset.createOrReplaceTempView("Poi");
 
@@ -102,7 +102,7 @@ public class NoiseEnrichment {
                                 .writeStream()
                                 .format("Console")
                                 // .trigger("10 seconds")
-                                .option("checkpointLocation", "/home/checks3")
+                                .option("checkpointLocation", "/mnt/c/Users/simon/Documents/MTDS/checks3")
                                 // .option("path", "/home/sensorPOI")
                                 .outputMode("append")
                                 .start();
