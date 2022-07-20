@@ -17,20 +17,13 @@ using namespace std;
 
 MPI_Datatype mpi_string_int_pair;
 
+// Pair to be send between processes
 struct string_int_pair {
 	int count;
 	char stringWord[MAX_LENGTH_WORD];
 };
 
-char* substr(char* arr, int begin, int len)
-{
-    char* res = new char[len + 1];
-    for (int i = 0; i < len; i++)
-        res[i] = *(arr + begin + i);
-    res[len] = 0;
-    return res;
-}
-
+// Function to compute hash on string
 long long compute_hash(const string& s) {
     const int p = 31;
     const int m = 1e9 + 9;
@@ -44,11 +37,11 @@ long long compute_hash(const string& s) {
     return hash_value;
 }
 
+// Send a message only to the master node
 void sendToMaster(unordered_map<string, int> HashMap) {
 
 	unordered_map<string, int>::iterator itr;
 	int TAG = TAG_GENERAL;
-	MPI_Request req;
 
 	for (itr = HashMap.begin(); itr != HashMap.end(); ++itr) {
 		string_int_pair local_pair;
@@ -56,16 +49,6 @@ void sendToMaster(unordered_map<string, int> HashMap) {
 
 		itr->first.copy(local_pair.stringWord, sizeof(itr->first));
 		local_pair.stringWord[itr->first.length()] = '\0';
-
-
-/*		MPI_Isend(
-		    &local_pair,
-		    1,
-		    mpi_string_int_pair,
-		    MASTER_NODE,
-		    TAG,
-		    MPI_COMM_WORLD,
-		    &req);*/
 
 		MPI_Send(
 	    &local_pair,
@@ -76,10 +59,9 @@ void sendToMaster(unordered_map<string, int> HashMap) {
 	    MPI_COMM_WORLD
 	    );
 
-	    cout << local_pair.stringWord  << " to " << MASTER_NODE << " \n";
-
 	}
 
+// Send a final message with a different tag to tell the recv node the messages are done
 	string_int_pair local_pair_void;
 	local_pair_void.count = -1;
 	MPI_Send(
@@ -102,32 +84,17 @@ void sendOnHash(unordered_map<string, int> HashMap, int rank, int world_size) {
 
 	int DEST_PROC;
 	int TAG = TAG_GENERAL;
-	MPI_Request req;
 
 	for (itr = HashMap.begin(); itr != HashMap.end(); ++itr) {
 		long long hash = compute_hash(itr->first);
 
 		DEST_PROC = hash % world_size;
 
-/*		if (DEST_PROC == rank) {
-			UnsentMap.insert(pair<string, int>(itr->first, itr->second));
-			continue;
-		}
-*/
 		string_int_pair local_pair;
 		local_pair.count = itr->second;
 
 		itr->first.copy(local_pair.stringWord, sizeof(itr->first));
 		local_pair.stringWord[itr->first.length()] = '\0';
-
-/*		MPI_Isend(
-		    &local_pair,
-		    1,
-		    mpi_string_int_pair,
-		    DEST_PROC,
-		    TAG,
-		    MPI_COMM_WORLD,
-		    &req);*/
 
 		MPI_Send(
 	    	&local_pair,
@@ -136,16 +103,12 @@ void sendOnHash(unordered_map<string, int> HashMap, int rank, int world_size) {
 	    	DEST_PROC,
 	    	TAG,
 	    	MPI_COMM_WORLD);
-
-		//cout << local_pair.stringWord << " from " << rank << "to" <<DEST_PROC<< " \n";
 	}
 
+// Send a final message with a different tag to tell the recv node the messages are done
 	string_int_pair local_pair_void;
 	local_pair_void.count = -1;
-
 	for (int i = 0; i < world_size; i++) {
-/*		if (i == rank)
-			continue;*/
 
 		MPI_Send(
 		&local_pair_void,
@@ -155,11 +118,9 @@ void sendOnHash(unordered_map<string, int> HashMap, int rank, int world_size) {
 		TAG_FINISH,
 		MPI_COMM_WORLD);
 	}
-
-
-	//cout << "FINISHED sending from process " << rank << "\n" ;
 }
 
+// Print a hashmap to a new file
 void printHashMap(unordered_map<string, int> HashMap, int rank) {
 	unordered_map<string, int>::iterator itr;
 	ofstream OutputFile;
@@ -218,14 +179,14 @@ int main(int argc, char *argv[]) {
 
 	FilePath.append(NoOfFile).append(FileExtension);
 
-	//cout << "The FilePath is " << FilePath + "\n";
-
 	ifstream file(FilePath);
 
 	if (!file) {
 		cerr << "Incorrect FilePath. \n";
 		return -1;
 	}
+
+// ---------------------------------------------------- CREATE LOCAL COUNT ----------------------------------------------------//
 
 	while (file >> ReadWord)
 	{
@@ -252,10 +213,10 @@ int main(int argc, char *argv[]) {
 
 // ---------------------------------------------------- SEND TO WORKERS ----------------------------------------------------//
 
-	std::unordered_map<string, int> UnsentHashMap;
+	// Send the word count to each process depending on the hash of the string
 	sendOnHash(ProcessLocalHashMap, rank, world_size);
 
-// ---------------------------------------------------- RECV TO WORKERS ----------------------------------------------------//
+// ---------------------------------------------------- RECV FROM WORKERS ----------------------------------------------------//
 
 	MPI_Request recv_request_proc;
 	MPI_Status recv_status_proc;
@@ -278,33 +239,13 @@ int main(int argc, char *argv[]) {
 			MPI_COMM_WORLD, 
 			&recv_request_proc);
 
-		//MPI_Barrier(MPI_COMM_WORLD);
-
-		//cout << "RECV " << data << "\n";
 		MPI_Request_get_status(recv_request_proc, &flag_proc, &recv_status_proc);
-		cout << "RECV: " <<recv_local.stringWord << recv_local.count << " from " << recv_status_proc.MPI_SOURCE <<" \n";
 
 		if (recv_status_proc.MPI_TAG == TAG_FINISH || recv_local.count == -1) {
 			stop_receive--;
-			cout << "RECV FINISH " << stop_receive << "in process" << rank <<" \n";
 			continue;
 			
 		}
-
-/*		MPI_Recv(
-			&recv_local, 
-			1, 
-			mpi_string_int_pair, 
-			MPI_ANY_SOURCE, 
-			MPI_ANY_TAG, 
-			MPI_COMM_WORLD, 
-			&recv_status_proc);
-
-		if (recv_status_proc.MPI_TAG == TAG_FINISH) {
-			stop_receive--;
-			cout << "RECV FINISH at process " << rank << " " << stop_receive << " \n" ;
-			continue;
-		}*/
 
 		if (PartialResultsHashMap.count(recv_local.stringWord) < 1) {
 			PartialResultsHashMap.insert(pair<string, int>(recv_local.stringWord, recv_local.count));
@@ -321,7 +262,6 @@ int main(int argc, char *argv[]) {
 
 	}
 
-    cout << "BEFORE BARRIER" << stop_receive << " \n";
 	MPI_Wait(&recv_request_proc, &recv_status_proc);
 
 // ---------------------------------------------------- SEND TO MASTER ----------------------------------------------------//
@@ -329,7 +269,7 @@ int main(int argc, char *argv[]) {
 	MPI_Barrier(MPI_COMM_WORLD); 
 
 	printHashMap(PartialResultsHashMap, rank);
-	
+
 	sendToMaster(PartialResultsHashMap);
 
 	// This is the last step - Master Node collecting everything
@@ -340,6 +280,8 @@ int main(int argc, char *argv[]) {
 		MPI_Request recv_request;
 		MPI_Status recv_status;
 		int flag;
+
+		//Create a separate hashmap which will contain the final result
 		std::unordered_map<string, int> MasterHashMap;
 
 		int stop_receive = world_size;
@@ -359,10 +301,8 @@ int main(int argc, char *argv[]) {
 
 			if (recv_status.MPI_TAG == TAG_FINISH){
 				stop_receive--;
-				cout << "MASTER recv" << stop_receive << "\n";
 			}
 
-			//ADD ALSO LOCAL MAP TO IT
 			MasterHashMap.insert(pair<string, int>(recv_local.stringWord, recv_local.count));
 
 		}
@@ -372,9 +312,6 @@ int main(int argc, char *argv[]) {
 		printHashMap(MasterHashMap, 5);
 	}
 	
-
-	
-
 	// Free all the structs
 	MPI_Type_free(&mpi_string_int_pair);
 	MPI_Finalize();
