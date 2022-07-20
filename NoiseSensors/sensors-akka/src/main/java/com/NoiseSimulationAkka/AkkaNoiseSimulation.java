@@ -37,7 +37,7 @@ public class AkkaNoiseSimulation {
     int areaWidth = 1000;
     int areaLength = 1000;
 
-    int timeStep = 1000;
+    int timeStep = 10000; //10s
     int timeStamp = 0;
 
     //44.49379649240147, 11.343115957526301 Bologna
