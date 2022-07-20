@@ -1,16 +1,32 @@
 [
     {
-        "id": "8268d5ea2538ea0d",
+        "id": "bcd6533f319f5556",
         "type": "tab",
-        "label": "Backup Room Actuator",
+        "label": "Backup Actuator B1R1",
         "disabled": false,
         "info": "",
         "env": []
     },
     {
-        "id": "5eefae07e55eef18",
+        "id": "496cb151bc233693",
         "type": "tab",
-        "label": "Main Room Actuator",
+        "label": "Main Actuator B1R1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "d57a67a76d621978",
+        "type": "tab",
+        "label": "Backup Actuator B2R1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "35db6532e56dab99",
+        "type": "tab",
+        "label": "Main Actuator B2R1",
         "disabled": false,
         "info": "",
         "env": []
@@ -42,13 +58,40 @@
         "sessionExpiry": ""
     },
     {
-        "id": "bb30c9b668281e84",
+        "id": "e18a2f97a54d7014",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "192.168.1.15",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "8134544764269a21",
         "type": "function",
-        "z": "8268d5ea2538ea0d",
+        "z": "bcd6533f319f5556",
         "name": "Logger",
-        "func": "var hbDif = new Date() - context.global.lastHeartBeat;\n\nvar seconds_from_last_HeartBeat = hbDif / 1000;\n\nvar mainActuatorActive = seconds_from_last_HeartBeat < 30;\n\nif (mainActuatorActive) {\n    msg.message = \"Main Actuator is Active\"\n    return msg;   \n}\n\nmsg.payload = msg.payload.toString().replace(/,(?![\" ])/g, \".\");\nmsg.payload = JSON.parse(msg.payload).d;\n\ntemperatureThreshold = 22.0\nhumidityThreshold = 38.0\n\nif (!context.global.lastChange) {\n    context.global.lastChange = new Date();\n}\n\nif (!context.global.temperatureReadings) {\n    context.global.temperatureReadings = [];\n}\n\nif (!context.global.temperatureMVA) {\n    context.global.temperatureMVA = 0;\n}\n\nif (!context.global.humidityReadings) {\n    context.global.humidityReadings = [];\n}\n\nif (!context.global.humidityMVA) {\n    context.global.homidityMVA = 0;\n}\n\n\nif (!context.global.heating) {\n    context.global.heating = false;\n}\n\n// computes the moving average of last 5 readings\ncontext.global.temperatureReadings.push(msg.payload[\"Temp (C)\"])\ncontext.global.humidityReadings.push(msg.payload[\"Hum (kg/m^3)\"])\n\nif (context.global.temperatureReadings.length == 6) {\n  context.global.temperatureReadings = context.global.temperatureReadings.slice(1);\n} \n\nif (context.global.humidityReadings.length == 6) {\n  context.global.humidityReadings = context.global.humidityReadings.slice(1);\n} \n\n\ncontext.global.temperatureMVA = context.global.temperatureReadings.reduce((a,b) => a + b, 0) / context.global.temperatureReadings.length;\ncontext.global.humidityMVA = context.global.humidityReadings.reduce((a,b) => a + b, 0) / context.global.humidityReadings.length;\n\n\nvar dif = new Date() - context.global.lastChange;\n\nvar seconds_from_T1_to_T2 = dif / 1000;\n\nvar timeoutPassed = seconds_from_T1_to_T2 > 30;\n\nmsg.message = \"Temperature MVA: \" + context.global.temperatureMVA;\n// msg.message = \"Temperature current: \" + context.global.temperatureReadings;\n// msg.message += \"Humidity current: \" + context.global.humidityReadings;\n \n \nif (context.global.temperatureMVA < temperatureThreshold && !context.global.heating && timeoutPassed) {\n    context.global.heating = true;\n    context.global.lastChange = new Date();\n    msg.message += \" --> Temperature is low, Turning on heating for room x\"\n} \nelse if (context.global.temperatureMVA > temperatureThreshold && context.global.heating && context.global.humidityMVA > humidityThreshold  && timeoutPassed) {\n    context.global.heating = false;\n    context.global.lastChange = new Date();\n    msg.message += \" --> Temperature is high, Turning off heating for room x\"\n}\n\nmsg.message += \", Humidity MVA: \" + context.global.humidityMVA;\n \nif (context.global.humidityMVA < temperatureThreshold && !context.global.heating && timeoutPassed) {\n    context.global.heating = true;\n    context.global.lastChange = new Date();\n    msg.message += \" --> Humidity is low, Turning on heating for room x\"\n} \nelse if (context.global.temperatureMVA > temperatureThreshold && context.global.heating && context.global.humidityMVA > humidityThreshold  && timeoutPassed) {\n    context.global.heating = false;\n    context.global.lastChange = new Date();\n    msg.message += \" --> Humidity is high, Turning off heating for room x\"\n}\n\nreturn msg;\n\n",
+        "func": "var hbDif = new Date() - context.flow.lastHeartBeat;\n\nvar seconds_from_last_HeartBeat = hbDif / 1000;\n\nvar mainActuatorActive = seconds_from_last_HeartBeat < 30;\n\nif (mainActuatorActive) {\n    msg.message = seconds_from_last_HeartBeat;\n    return msg;   \n}\n\nmsg.payload = JSON.parse(msg.payload);\n\ntemperatureThreshold = 22.0\nhumidityThreshold = 38.0\n\nif (!context.flow.lastChange) {\n    context.flow.lastChange = new Date();\n}\n\nif (!context.flow.temperatureReadings) {\n    context.flow.temperatureReadings = [];\n}\n\nif (!context.flow.temperatureMVA) {\n    context.flow.temperatureMVA = 0;\n}\n\nif (!context.flow.humidityReadings) {\n    context.flow.humidityReadings = [];\n}\n\nif (!context.flow.humidityMVA) {\n    context.flow.humidityMVA = 0;\n}\n\n\nif (!context.flow.heating) {\n    context.flow.heating = false;\n}\n\n// computes the moving average of last 5 readings\ncontext.flow.temperatureReadings.push(msg.payload[\"Temp\"])\ncontext.flow.humidityReadings.push(msg.payload[\"Hum\"])\n\nif (context.flow.temperatureReadings.length == 6) {\n  context.flow.temperatureReadings = context.flow.temperatureReadings.slice(1);\n} \n\nif (context.flow.humidityReadings.length == 6) {\n  context.flow.humidityReadings = context.flow.humidityReadings.slice(1);\n} \n\n\ncontext.flow.temperatureMVA = context.flow.temperatureReadings.reduce((a,b) => a + b, 0) / context.flow.temperatureReadings.length;\ncontext.flow.humidityMVA = context.flow.humidityReadings.reduce((a,b) => a + b, 0) / context.flow.humidityReadings.length;\n\n\nvar dif = new Date() - context.flow.lastChange;\n\nvar seconds_from_T1_to_T2 = dif / 1000;\n\nvar timeoutPassed = seconds_from_T1_to_T2 > 30;\n\nmsg.message = \"Temperature MVA: \" + context.flow.temperatureMVA;\n// msg.message = \"Temperature current: \" + context.flow.temperatureReadings;\n// msg.message += \"Humidity current: \" + context.flow.humidityReadings;\n \n \nif (context.flow.temperatureMVA < temperatureThreshold && !context.flow.heating && timeoutPassed) {\n    context.flow.heating = true;\n    context.flow.lastChange = new Date();\n    msg.message += \" --> Temperature is low, Turning on heating for room x\"\n} \nelse if (context.flow.temperatureMVA > temperatureThreshold && context.flow.heating && context.flow.humidityMVA > humidityThreshold  && timeoutPassed) {\n    context.flow.heating = false;\n    context.flow.lastChange = new Date();\n    msg.message += \" --> Temperature is high, Turning off heating for room x\"\n}\n\nmsg.message += \", Humidity MVA: \" + context.flow.humidityMVA;\n \nif (context.flow.humidityMVA < humidityThreshold && !context.flow.heating && timeoutPassed) {\n    context.flow.heating = true;\n    context.flow.lastChange = new Date();\n    msg.message += \" --> Humidity is low, Turning on heating for room x\"\n} \nelse if (context.flow.temperatureMVA > temperatureThreshold && context.flow.heating && context.flow.humidityMVA > humidityThreshold  && timeoutPassed) {\n    context.flow.heating = false;\n    context.flow.lastChange = new Date();\n    msg.message += \" --> Humidity is high, Turning off heating for room x\"\n}\n\nreturn msg;\n\n",
         "outputs": 1,
-        "noerr": 0,
+        "noerr": 15,
         "initialize": "",
         "finalize": "",
         "libs": [],
@@ -56,19 +99,19 @@
         "y": 280,
         "wires": [
             [
-                "a538035532dd2c18"
+                "68219ef17d903923"
             ]
         ]
     },
     {
-        "id": "e0d63ae89d23a4cd",
+        "id": "2bb4f81ce556cc34",
         "type": "mqtt in",
-        "z": "8268d5ea2538ea0d",
+        "z": "bcd6533f319f5556",
         "name": "",
-        "topic": "iot/native/launchpad/json",
+        "topic": "/iot/building_1/room_1/json",
         "qos": "2",
         "datatype": "auto",
-        "broker": "ddfecfd2876381ee",
+        "broker": "e18a2f97a54d7014",
         "nl": false,
         "rap": true,
         "rh": 0,
@@ -77,14 +120,14 @@
         "y": 280,
         "wires": [
             [
-                "bb30c9b668281e84"
+                "8134544764269a21"
             ]
         ]
     },
     {
-        "id": "a538035532dd2c18",
+        "id": "68219ef17d903923",
         "type": "debug",
-        "z": "8268d5ea2538ea0d",
+        "z": "bcd6533f319f5556",
         "name": "",
         "active": true,
         "tosidebar": true,
@@ -99,49 +142,49 @@
         "wires": []
     },
     {
-        "id": "fa511e8eceeaa6db",
+        "id": "b4c89c6ef1a5b292",
         "type": "mqtt in",
-        "z": "8268d5ea2538ea0d",
+        "z": "bcd6533f319f5556",
         "name": "",
-        "topic": "heartbeat",
+        "topic": "/heartbeat/building_1/room_1/json",
         "qos": "2",
         "datatype": "auto",
-        "broker": "ddfecfd2876381ee",
+        "broker": "e18a2f97a54d7014",
         "nl": false,
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 140,
+        "x": 180,
         "y": 160,
         "wires": [
             [
-                "abcfa9f9b1ae2a9e"
+                "485c883d9565907c"
             ]
         ]
     },
     {
-        "id": "abcfa9f9b1ae2a9e",
+        "id": "485c883d9565907c",
         "type": "function",
-        "z": "8268d5ea2538ea0d",
+        "z": "bcd6533f319f5556",
         "name": "Logger",
-        "func": "context.global.lastHeartBeat = new Date();\n\nmsg.message = \"Received an heartbeat from the main actuator\"\n\nreturn msg",
+        "func": "context.flow.lastHeartBeat = new Date();\n\ncontext.flow.heating = JSON.parse(msg.payload).Heating\n\nmsg.message = \"Received an heartbeat from the main actuator\"\n\nreturn msg",
         "outputs": 1,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 400,
+        "x": 420,
         "y": 160,
         "wires": [
             [
-                "7df3616667b71e2c"
+                "9fc788f3fd214c2e"
             ]
         ]
     },
     {
-        "id": "7df3616667b71e2c",
+        "id": "9fc788f3fd214c2e",
         "type": "debug",
-        "z": "8268d5ea2538ea0d",
+        "z": "bcd6533f319f5556",
         "name": "",
         "active": true,
         "tosidebar": true,
@@ -156,9 +199,9 @@
         "wires": []
     },
     {
-        "id": "533cc8147a0c451c",
+        "id": "8838e459eb600aa2",
         "type": "comment",
-        "z": "5eefae07e55eef18",
+        "z": "496cb151bc233693",
         "name": "WARNING: please check you have started this container with a volume that is mounted to /data\\n otherwise any flow changes are lost when you redeploy or upgrade the container\\n (e.g. upgrade to a more recent node-red docker image).\\n  If you are using named volumes you can ignore this warning.\\n Double click or see info side panel to learn how to start Node-RED in Docker to save your work",
         "info": "\nTo start docker with a bind mount volume (-v option), for example:\n\n```\ndocker run -it -p 1880:1880 -v /home/user/node_red_data:/data --name mynodered nodered/node-red\n```\n\nwhere `/home/user/node_red_data` is a directory on your host machine where you want to store your flows.\n\nIf you do not do this then you can experiment and redploy flows, but if you restart or upgrade the container the flows will be disconnected and lost. \n\nThey will still exist in a hidden data volume, which can be recovered using standard docker techniques, but that is much more complex than just starting with a named volume as described above.",
         "x": 330,
@@ -166,9 +209,9 @@
         "wires": []
     },
     {
-        "id": "e6947ba60bcf21e4",
+        "id": "3c404114f345a14d",
         "type": "debug",
-        "z": "5eefae07e55eef18",
+        "z": "496cb151bc233693",
         "name": "",
         "active": true,
         "tosidebar": true,
@@ -183,34 +226,34 @@
         "wires": []
     },
     {
-        "id": "5925cb0325a5451b",
+        "id": "9d56b5f73b27df25",
         "type": "mqtt in",
-        "z": "5eefae07e55eef18",
+        "z": "496cb151bc233693",
         "name": "",
-        "topic": "iot/native/launchpad/json",
+        "topic": "/iot/building_1/room_1/json",
         "qos": "2",
         "datatype": "auto",
-        "broker": "ddfecfd2876381ee",
+        "broker": "e18a2f97a54d7014",
         "nl": false,
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 115,
+        "x": 150,
         "y": 300,
         "wires": [
             [
-                "4172925a96771578"
+                "3814cc63b8756c39"
             ]
         ]
     },
     {
-        "id": "4172925a96771578",
+        "id": "3814cc63b8756c39",
         "type": "function",
-        "z": "5eefae07e55eef18",
+        "z": "496cb151bc233693",
         "name": "Logger",
-        "func": "msg.payload = msg.payload.toString().replace(/,(?![\" ])/g, \".\");\nmsg.payload = JSON.parse(msg.payload).d;\n\ntemperatureThreshold = 22.0\nhumidityThreshold = 38.0\n\nif (!context.global.lastChange) {\n    context.global.lastChange = new Date();\n}\n\nif (!context.global.temperatureReadings) {\n    context.global.temperatureReadings = [];\n}\n\nif (!context.global.temperatureMVA) {\n    context.global.temperatureMVA = 0;\n}\n\nif (!context.global.humidityReadings) {\n    context.global.humidityReadings = [];\n}\n\nif (!context.global.humidityMVA) {\n    context.global.homidityMVA = 0;\n}\n\n\nif (!context.global.heating) {\n    context.global.heating = false;\n}\n\n// computes the moving average of last 5 readings\ncontext.global.temperatureReadings.push(msg.payload[\"Temp (C)\"])\ncontext.global.humidityReadings.push(msg.payload[\"Hum (kg/m^3)\"])\n\nif (context.global.temperatureReadings.length == 6) {\n  context.global.temperatureReadings = context.global.temperatureReadings.slice(1);\n} \n\nif (context.global.humidityReadings.length == 6) {\n  context.global.humidityReadings = context.global.humidityReadings.slice(1);\n} \n\n\ncontext.global.temperatureMVA = context.global.temperatureReadings.reduce((a,b) => a + b, 0) / context.global.temperatureReadings.length;\ncontext.global.humidityMVA = context.global.humidityReadings.reduce((a,b) => a + b, 0) / context.global.humidityReadings.length;\n\n\nvar dif = new Date() - context.global.lastChange;\n\nvar seconds_from_T1_to_T2 = dif / 1000;\n\nvar timeoutPassed = seconds_from_T1_to_T2 > 30;\n\nmsg.message = \"Temperature MVA: \" + context.global.temperatureMVA;\n// msg.message = \"Temperature current: \" + context.global.temperatureReadings;\n// msg.message += \"Humidity current: \" + context.global.humidityReadings;\n \n \nif (context.global.temperatureMVA < temperatureThreshold && !context.global.heating && timeoutPassed) {\n    context.global.heating = true;\n    context.global.lastChange = new Date();\n    msg.message += \" --> Temperature is low, Turning on heating for room x\"\n} \nelse if (context.global.temperatureMVA > temperatureThreshold && context.global.heating && context.global.humidityMVA > humidityThreshold  && timeoutPassed) {\n    context.global.heating = false;\n    context.global.lastChange = new Date();\n    msg.message += \" --> Temperature is high, Turning off heating for room x\"\n}\n\nmsg.message += \", Humidity MVA: \" + context.global.humidityMVA;\n \nif (context.global.humidityMVA < temperatureThreshold && !context.global.heating && timeoutPassed) {\n    context.global.heating = true;\n    context.global.lastChange = new Date();\n    msg.message += \" --> Humidity is low, Turning on heating for room x\"\n} \nelse if (context.global.temperatureMVA > temperatureThreshold && context.global.heating && context.global.humidityMVA > humidityThreshold  && timeoutPassed) {\n    context.global.heating = false;\n    context.global.lastChange = new Date();\n    msg.message += \" --> Humidity is high, Turning off heating for room x\"\n}\n\nreturn msg;\n\n",
+        "func": "msg.payload = JSON.parse(msg.payload);\n\ntemperatureThreshold = 15.0\nhumidityThreshold = 30.0\n\nif (!context.flow.lastChange) {\n    context.flow.lastChange = new Date();\n}\n\nif (!context.flow.temperatureReadings) {\n    context.flow.temperatureReadings = [];\n}\n\nif (!context.flow.temperatureMVA) {\n    context.flow.temperatureMVA = 0;\n}\n\nif (!context.flow.humidityReadings) {\n    context.flow.humidityReadings = [];\n}\n\nif (!context.flow.humidityMVA) {\n    context.flow.humidityMVA = 0;\n}\n\n\nif (!context.flow.heating) {\n    context.flow.heating = false;\n}\n\n// computes the moving average of last 5 readings\ncontext.flow.temperatureReadings.push(msg.payload[\"Temp\"])\ncontext.flow.humidityReadings.push(msg.payload[\"Hum\"])\n\nif (context.flow.temperatureReadings.length == 6) {\n  context.flow.temperatureReadings = context.flow.temperatureReadings.slice(1);\n} \n\nif (context.flow.humidityReadings.length == 6) {\n  context.flow.humidityReadings = context.flow.humidityReadings.slice(1);\n} \n\n\ncontext.flow.temperatureMVA = context.flow.temperatureReadings.reduce((a,b) => a + b, 0) / context.flow.temperatureReadings.length;\ncontext.flow.humidityMVA = context.flow.humidityReadings.reduce((a,b) => a + b, 0) / context.flow.humidityReadings.length;\n\n\nvar dif = new Date() - context.flow.lastChange;\n\nvar seconds_from_T1_to_T2 = dif / 1000;\n\nvar timeoutPassed = seconds_from_T1_to_T2 > 30;\n\nmsg.message = \"Temperature MVA: \" + context.flow.temperatureMVA;\n// msg.message = \"Temperature current: \" + context.flow.temperatureReadings;\n// msg.message += \"Humidity current: \" + context.flow.humidityReadings;\n \n \nif (context.flow.temperatureMVA < temperatureThreshold && !context.flow.heating && timeoutPassed) {\n    context.flow.heating = true;\n    context.flow.lastChange = new Date();\n    msg.message += \" --> Temperature is low, Turning on heating for room x\"\n} \nelse if (context.flow.temperatureMVA > temperatureThreshold && context.flow.heating && context.flow.humidityMVA > humidityThreshold  && timeoutPassed) {\n    context.flow.heating = false;\n    context.flow.lastChange = new Date();\n    msg.message += \" --> Temperature is high, Turning off heating for room x\"\n}\n\nmsg.message += \", Humidity MVA: \" + context.flow.humidityMVA;\n \nif (context.flow.humidityMVA < humidityThreshold && !context.flow.heating && timeoutPassed) {\n    context.flow.heating = true;\n    context.flow.lastChange = new Date();\n    msg.message += \" --> Humidity is low, Turning on heating for room x\"\n} \nelse if (context.flow.temperatureMVA > temperatureThreshold && context.flow.heating && context.flow.humidityMVA > humidityThreshold  && timeoutPassed) {\n    context.flow.heating = false;\n    context.flow.lastChange = new Date();\n    msg.message += \" --> Humidity is high, Turning off heating for room x\"\n}\n\nmsg.payload[\"Heating\"] = context.flow.heating\n\nreturn msg;\n\n",
         "outputs": 1,
-        "noerr": 0,
+        "noerr": 14,
         "initialize": "",
         "finalize": "",
         "libs": [],
@@ -218,17 +261,17 @@
         "y": 300,
         "wires": [
             [
-                "e6947ba60bcf21e4",
-                "8ca3c5956dd55d1f"
+                "3c404114f345a14d",
+                "72adfbc862ce7773"
             ]
         ]
     },
     {
-        "id": "8ca3c5956dd55d1f",
+        "id": "72adfbc862ce7773",
         "type": "mqtt out",
-        "z": "5eefae07e55eef18",
+        "z": "496cb151bc233693",
         "name": "",
-        "topic": "heartbeat",
+        "topic": "/heartbeat/building_1/room_1/json",
         "qos": "2",
         "retain": "",
         "respTopic": "",
@@ -236,9 +279,199 @@
         "userProps": "",
         "correl": "",
         "expiry": "",
-        "broker": "ddfecfd2876381ee",
-        "x": 830,
+        "broker": "e18a2f97a54d7014",
+        "x": 700,
         "y": 400,
+        "wires": []
+    },
+    {
+        "id": "f8d10979f6662b08",
+        "type": "function",
+        "z": "d57a67a76d621978",
+        "name": "Logger",
+        "func": "var hbDif = new Date() - context.flow.lastHeartBeat;\n\nvar seconds_from_last_HeartBeat = hbDif / 1000;\n\nvar mainActuatorActive = seconds_from_last_HeartBeat < 30;\n\nif (mainActuatorActive) {\n    msg.message = seconds_from_last_HeartBeat;\n    return msg;   \n}\n\nmsg.payload = JSON.parse(msg.payload);\n\ntemperatureThreshold = 22.0\nhumidityThreshold = 38.0\n\nif (!context.flow.lastChange) {\n    context.flow.lastChange = new Date();\n}\n\nif (!context.flow.temperatureReadings) {\n    context.flow.temperatureReadings = [];\n}\n\nif (!context.flow.temperatureMVA) {\n    context.flow.temperatureMVA = 0;\n}\n\nif (!context.flow.humidityReadings) {\n    context.flow.humidityReadings = [];\n}\n\nif (!context.flow.humidityMVA) {\n    context.flow.humidityMVA = 0;\n}\n\n\nif (!context.flow.heating) {\n    context.flow.heating = false;\n}\n\n// computes the moving average of last 5 readings\ncontext.flow.temperatureReadings.push(msg.payload[\"Temp\"])\ncontext.flow.humidityReadings.push(msg.payload[\"Hum\"])\n\nif (context.flow.temperatureReadings.length == 6) {\n  context.flow.temperatureReadings = context.flow.temperatureReadings.slice(1);\n} \n\nif (context.flow.humidityReadings.length == 6) {\n  context.flow.humidityReadings = context.flow.humidityReadings.slice(1);\n} \n\n\ncontext.flow.temperatureMVA = context.flow.temperatureReadings.reduce((a,b) => a + b, 0) / context.flow.temperatureReadings.length;\ncontext.flow.humidityMVA = context.flow.humidityReadings.reduce((a,b) => a + b, 0) / context.flow.humidityReadings.length;\n\n\nvar dif = new Date() - context.flow.lastChange;\n\nvar seconds_from_T1_to_T2 = dif / 1000;\n\nvar timeoutPassed = seconds_from_T1_to_T2 > 30;\n\nmsg.message = \"Temperature MVA: \" + context.flow.temperatureMVA;\n// msg.message = \"Temperature current: \" + context.flow.temperatureReadings;\n// msg.message += \"Humidity current: \" + context.flow.humidityReadings;\n \n \nif (context.flow.temperatureMVA < temperatureThreshold && !context.flow.heating && timeoutPassed) {\n    context.flow.heating = true;\n    context.flow.lastChange = new Date();\n    msg.message += \" --> Temperature is low, Turning on heating for room x\"\n} \nelse if (context.flow.temperatureMVA > temperatureThreshold && context.flow.heating && context.flow.humidityMVA > humidityThreshold  && timeoutPassed) {\n    context.flow.heating = false;\n    context.flow.lastChange = new Date();\n    msg.message += \" --> Temperature is high, Turning off heating for room x\"\n}\n\nmsg.message += \", Humidity MVA: \" + context.flow.humidityMVA;\n \nif (context.flow.humidityMVA < humidityThreshold && !context.flow.heating && timeoutPassed) {\n    context.flow.heating = true;\n    context.flow.lastChange = new Date();\n    msg.message += \" --> Humidity is low, Turning on heating for room x\"\n} \nelse if (context.flow.temperatureMVA > temperatureThreshold && context.flow.heating && context.flow.humidityMVA > humidityThreshold  && timeoutPassed) {\n    context.flow.heating = false;\n    context.flow.lastChange = new Date();\n    msg.message += \" --> Humidity is high, Turning off heating for room x\"\n}\n\nreturn msg;\n\n",
+        "outputs": 1,
+        "noerr": 15,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 460,
+        "y": 260,
+        "wires": [
+            [
+                "44e44d6685adb8b5"
+            ]
+        ]
+    },
+    {
+        "id": "e1834abf2cbfa44a",
+        "type": "mqtt in",
+        "z": "d57a67a76d621978",
+        "name": "",
+        "topic": "/iot/building_2/room_1/json",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "e18a2f97a54d7014",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 230,
+        "y": 260,
+        "wires": [
+            [
+                "f8d10979f6662b08"
+            ]
+        ]
+    },
+    {
+        "id": "44e44d6685adb8b5",
+        "type": "debug",
+        "z": "d57a67a76d621978",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "message",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 640,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "87df05cf54dac318",
+        "type": "mqtt in",
+        "z": "d57a67a76d621978",
+        "name": "",
+        "topic": "/heartbeat/building_2/room_1/json",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "e18a2f97a54d7014",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 200,
+        "y": 140,
+        "wires": [
+            [
+                "bdb36671755290d4"
+            ]
+        ]
+    },
+    {
+        "id": "bdb36671755290d4",
+        "type": "function",
+        "z": "d57a67a76d621978",
+        "name": "Logger",
+        "func": "context.flow.lastHeartBeat = new Date();\n\ncontext.flow.heating = JSON.parse(msg.payload).Heating\n\nmsg.message = \"Received an heartbeat from the main actuator\"\n\nreturn msg",
+        "outputs": 1,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 140,
+        "wires": [
+            [
+                "5998ff66245506d9"
+            ]
+        ]
+    },
+    {
+        "id": "5998ff66245506d9",
+        "type": "debug",
+        "z": "d57a67a76d621978",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "message",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 660,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "6e4ce5daf57c0a4c",
+        "type": "debug",
+        "z": "35db6532e56dab99",
+        "name": "",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "message",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 640,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "1416dbe1f9415ca4",
+        "type": "mqtt in",
+        "z": "35db6532e56dab99",
+        "name": "",
+        "topic": "/iot/building_2/room_1/json",
+        "qos": "2",
+        "datatype": "auto",
+        "broker": "e18a2f97a54d7014",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 110,
+        "y": 140,
+        "wires": [
+            [
+                "e2ed66b1dfcd89b7"
+            ]
+        ]
+    },
+    {
+        "id": "e2ed66b1dfcd89b7",
+        "type": "function",
+        "z": "35db6532e56dab99",
+        "name": "Logger",
+        "func": "msg.payload = JSON.parse(msg.payload);\n\ntemperatureThreshold = 22.0\nhumidityThreshold = 38.0\n\nif (!context.flow.lastChange) {\n    context.flow.lastChange = new Date();\n}\n\nif (!context.flow.temperatureReadings) {\n    context.flow.temperatureReadings = [];\n}\n\nif (!context.flow.temperatureMVA) {\n    context.flow.temperatureMVA = 0;\n}\n\nif (!context.flow.humidityReadings) {\n    context.flow.humidityReadings = [];\n}\n\nif (!context.flow.humidityMVA) {\n    context.flow.humidityMVA = 0;\n}\n\n\nif (!context.flow.heating) {\n    context.flow.heating = false;\n}\n\n// computes the moving average of last 5 readings\ncontext.flow.temperatureReadings.push(msg.payload[\"Temp\"])\ncontext.flow.humidityReadings.push(msg.payload[\"Hum\"])\n\nif (context.flow.temperatureReadings.length == 6) {\n  context.flow.temperatureReadings = context.flow.temperatureReadings.slice(1);\n} \n\nif (context.flow.humidityReadings.length == 6) {\n  context.flow.humidityReadings = context.flow.humidityReadings.slice(1);\n} \n\n\ncontext.flow.temperatureMVA = context.flow.temperatureReadings.reduce((a,b) => a + b, 0) / context.flow.temperatureReadings.length;\ncontext.flow.humidityMVA = context.flow.humidityReadings.reduce((a,b) => a + b, 0) / context.flow.humidityReadings.length;\n\n\nvar dif = new Date() - context.flow.lastChange;\n\nvar seconds_from_T1_to_T2 = dif / 1000;\n\nvar timeoutPassed = seconds_from_T1_to_T2 > 30;\n\nmsg.message = \"Temperature MVA: \" + context.flow.temperatureMVA;\n// msg.message = \"Temperature current: \" + context.flow.temperatureReadings;\n// msg.message += \"Humidity current: \" + context.flow.humidityReadings;\n \n \nif (context.flow.temperatureMVA < temperatureThreshold && !context.flow.heating && timeoutPassed) {\n    context.flow.heating = true;\n    context.flow.lastChange = new Date();\n    msg.message += \" --> Temperature is low, Turning on heating for room x\"\n} \nelse if (context.flow.temperatureMVA > temperatureThreshold && context.flow.heating && context.flow.humidityMVA > humidityThreshold  && timeoutPassed) {\n    context.flow.heating = false;\n    context.flow.lastChange = new Date();\n    msg.message += \" --> Temperature is high, Turning off heating for room x\"\n}\n\nmsg.message += \", Humidity MVA: \" + context.flow.humidityMVA;\n \nif (context.flow.humidityMVA < humidityThreshold && !context.flow.heating && timeoutPassed) {\n    context.flow.heating = true;\n    context.flow.lastChange = new Date();\n    msg.message += \" --> Humidity is low, Turning on heating for room x\"\n} \nelse if (context.flow.temperatureMVA > temperatureThreshold && context.flow.heating && context.flow.humidityMVA > humidityThreshold  && timeoutPassed) {\n    context.flow.heating = false;\n    context.flow.lastChange = new Date();\n    msg.message += \" --> Humidity is high, Turning off heating for room x\"\n}\n\nmsg.payload[\"Heating\"] = context.flow.heating\n\nreturn msg;\n\n",
+        "outputs": 1,
+        "noerr": 14,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 140,
+        "wires": [
+            [
+                "6e4ce5daf57c0a4c",
+                "3c55a69d56722faf"
+            ]
+        ]
+    },
+    {
+        "id": "3c55a69d56722faf",
+        "type": "mqtt out",
+        "z": "35db6532e56dab99",
+        "name": "",
+        "topic": "/heartbeat/building_2/room_1/json",
+        "qos": "2",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "e18a2f97a54d7014",
+        "x": 660,
+        "y": 240,
         "wires": []
     }
 ]

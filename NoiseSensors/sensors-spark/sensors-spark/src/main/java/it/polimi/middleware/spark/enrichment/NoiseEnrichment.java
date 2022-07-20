@@ -85,7 +85,8 @@ public class NoiseEnrichment {
 
                 // Query
                 Dataset<Row> noisePOI = spark
-                                .sql("SELECT N.reading.sensorID, N.timestamp, N.reading.timestamp AS seqNUM, N.reading.lat, N.reading.lon, N.reading.averageExceeded, N.reading.noiseVal, P.name, P.region,  SQRT(  POWER(ROUND(N.reading.lat,2) - DOUBLE(P.Latitude), 2) +  POWER(ROUND(N.reading.lon,2) - DOUBLE(P.Longitude),2) ) AS Dist FROM CleanNoise AS N CROSS JOIN Poi AS P");
+                                .sql("SELECT N.reading.sensorID, N.timestamp, N.reading.timestamp AS seqNUM, N.reading.lat, N.reading.lon, N.reading.averageExceeded, N.reading.noiseVal, P.name, P.region,  
+                                GEO_DISTANCE(ROUND(N.reading.lat,2), DOUBLE(P.Latitude), ROUND(N.reading.lon,2) , DOUBLE(P.Longitude)) AS Dist FROM CleanNoise AS N CROSS JOIN Poi AS P");
 
                 noisePOI
                                 .withWatermark("timestamp", "5 seconds")
@@ -98,12 +99,11 @@ public class NoiseEnrichment {
 
                 StreamingQuery query = spark
                                 .sql("SELECT * FROM MinDist AS MD JOIN NoisePOI AS NP ON MD.sensorID =  NP.sensorID AND MD.seqNUM = NP.seqNUM AND MD.`min(Dist)` = NP.Dist ")
-                                //.sql("SELECT * FROM NoisePOI")
                                 .writeStream()
-                                .format("Console")
+                                .format("csv")
                                 // .trigger("10 seconds")
-                                .option("checkpointLocation", "/mnt/c/Users/simon/Documents/MTDS/checks3")
-                                // .option("path", "/home/sensorPOI")
+                                .option("checkpointLocation", "/mnt/c/Users/simon/Documents/MTDS/checks4")
+                                .option("path", "/mnt/c/Users/simon/Documents/MTDS/sensorPOI")
                                 .outputMode("append")
                                 .start();
 
