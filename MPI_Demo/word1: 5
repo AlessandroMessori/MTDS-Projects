@@ -1,8 +1,0 @@
-word1: 5
-word3: 6 ---> map1
-
-word1: 3
-word4: 8 ---> map2
-
-what if the files contain diff words?
-
