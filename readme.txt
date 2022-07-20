@@ -7,7 +7,7 @@ Projects:
      * Technologies --> Contiki, Akka, Kafka, Spark
      * Functionalities --> Sensor Data, Data Cleaning and Enrichment 
 
-  - Project #2: 
+  - Project #2: : Smart Buildings and Neighborhoods 
      * Technologies --> Contiki, Node-Red
      * Functionalities --> Control Loops
 
