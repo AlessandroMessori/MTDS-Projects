@@ -1,0 +1,46 @@
+MPI - Modify Exercise 7 (character count) to count words instead of characters
+
+● The program still mimics the MapReduce programming model
+
+● First, each process reads a (different) input file and computes the number of occurrences of each word in that file
+
+● Second, words are partitioned across processes, and each process reduces the partial results for the words it is responsible for
+
+● Third, the final results are delivered to a single node, which writes them to a single file
+
+● You can assume the maximum length of words to be known at compile time
+
+● You can write your program in C++ and use the strings and collections data types of the standardlibrary
+
+https://github.com/piyush7gupta/Mapreduce-using-MPI-OPENMP-Wordcount/blob/master/wordcountmpi.cpp
+
+https://github.com/adhithadias/map-reduce-word-count-openmp-mpi/blob/main/mpi_parallel.c
+
+https://github.com/giuseppeangri/mpi-parallel-words-count/blob/master/src/counter_container_mpi.c
+
+http://supercomputingblog.com/wp-content/uploads/2009/07/MPI_Tutorial_3.cpp
+
+https://gitlab.cs.pub.ro/APP-2020/cholesky-decomposition-badubumsk/-/blob/master/Makefile
+
+https://www.geeksforgeeks.org/map-associative-containers-the-c-standard-template-library-stl/
+
+https://people.math.sc.edu/Burkardt/cpp_src/mpi/search_mpi.cpp
+
+https://people.math.sc.edu/Burkardt/cpp_src/mpi/mpi.html
+
+
+
+
+	// or we can split equally by bits every file
+
+	//A BARRIER HERE before adding to the finalHashMap
+
+	//Shuffling on parent process
+	
+	//All Maps are then sent to a parent process => count the total no of words and splits the words to the processes
+	//Each process computes the no of occurences of the words
+
+	//ANOTHER BARRIER HERE?
+
+	//The parent node writes all the occurences to a file
+
