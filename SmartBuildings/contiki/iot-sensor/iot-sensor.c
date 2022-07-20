@@ -575,7 +575,6 @@ publish(void)
     return;
   }
 
-	printf("%s\n", buf_ptr);
 	
   remaining -= len;
   buf_ptr += len;
@@ -585,8 +584,7 @@ publish(void)
   memset(def_rt_str, 0, sizeof(def_rt_str));
   ipaddr_sprintf(def_rt_str, sizeof(def_rt_str), uip_ds6_defrt_choose());
 
-  len = snprintf(buf_ptr, remaining, ",\"Def Route\":\"%s\"",
-                 def_rt_str);
+  len = snprintf(buf_ptr, remaining, "}");
 
   if(len < 0 || len >= remaining) {
     LOG_ERR("Buffer too short. Have %d, need %d + \\0\n", remaining, len);
@@ -595,7 +593,6 @@ publish(void)
   remaining -= len;
   buf_ptr += len;
 
-  len = snprintf(buf_ptr, remaining, "}}");
 
   if(len < 0 || len >= remaining) {
     LOG_ERR("Buffer too short. Have %d, need %d + \\0\n", remaining, len);
