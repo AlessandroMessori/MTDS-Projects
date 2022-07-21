@@ -14,7 +14,7 @@ import static org.apache.spark.sql.functions.*;
 
 import java.util.concurrent.TimeoutException;
 
-public class NoiseEnrichment {
+public class NoiseEnrichmentUpdate {
 
         private static double deg2rad(double deg) {
                 return deg * (Math.PI / 180);
@@ -59,13 +59,15 @@ public class NoiseEnrichment {
                                 .master(master)
                                 .appName("NoiseEnrichment")
                                 .getOrCreate();
+                                
+                spark.sqlContext().clearCache();
 
                 spark.udf().register("GEO_DISTANCE", distanceFromGEO(), DataTypes.DoubleType);
 
                 Dataset<Row> poiDataset = spark
                                 .read()
                                 .option("header", "true")
-                                .csv("/mnt/c/Users/simon/Documents/MTDS/MTDS-Projects/NoiseSensors/sensors-spark/sensors-spark/files/poi_small.csv");
+                                .csv("/mnt/c/Users/simon/Documents/MTDS/MTDS-Projects/NoiseSensors/sensors-spark/sensors-spark/files/poi_small_update.csv");
 
                 poiDataset.createOrReplaceTempView("Poi");
 
@@ -86,8 +88,7 @@ public class NoiseEnrichment {
 
                 // Computes the distance between each reading and POI
                 Dataset<Row> noisePOI = spark
-                                .sql("SELECT N.reading.sensorID, N.timestamp, N.reading.timestamp AS seqNUM, N.reading.lat, N.reading.lon, N.reading.averageExceeded, N.reading.noiseVal, P.name, P.region,  
-                                GEO_DISTANCE(ROUND(N.reading.lat,2), DOUBLE(P.Latitude), ROUND(N.reading.lon,2) , DOUBLE(P.Longitude)) AS Dist FROM CleanNoise AS N CROSS JOIN Poi AS P");
+                                .sql("SELECT N.reading.sensorID, N.timestamp, N.reading.timestamp AS seqNUM, N.reading.lat, N.reading.lon, N.reading.averageExceeded, N.reading.noiseVal, P.name, P.region,  SQRT(  POWER(ROUND(N.reading.lat,2) - DOUBLE(P.Latitude), 2) +  POWER(ROUND(N.reading.lon,2) - DOUBLE(P.Longitude),2) ) AS Dist FROM CleanNoise AS N CROSS JOIN Poi AS P");
 
                 noisePOI
                                 .withWatermark("timestamp", "5 seconds")
@@ -102,11 +103,11 @@ public class NoiseEnrichment {
 
                 
                 StreamingQuery query = spark
-                                .sql("SELECT * FROM MinDist AS MD JOIN NoisePOI AS NP ON MD.sensorID =  NP.sensorID AND MD.seqNUM = NP.seqNUM AND MD.`min(Dist)` = NP.Dist ")
+                                .sql("SELECT * FROM MinDist AS MD JOIN NoisePOI AS NP ON MD.sensorID =  NP.sensorID AND MD.seqNUM = NP.seqNUM AND MD.`min(Dist)` = NP.Dist")
                                 .writeStream()
                                 .format("csv")
                                 // .trigger("10 seconds")
-                                .option("checkpointLocation", "/mnt/c/Users/simon/Documents/MTDS/checks4")
+                                .option("checkpointLocation", "/mnt/c/Users/simon/Documents/MTDS/checks5")
                                 .option("path", "/mnt/c/Users/simon/Documents/MTDS/sensorPOI")
                                 .outputMode("append")
                                 .start();

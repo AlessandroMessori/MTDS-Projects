@@ -2,10 +2,10 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>spark_enrichment</groupId>
-    <artifactId>spark_enrichment</artifactId>
+    <groupId>spark_enrichmentUpdate</groupId>
+    <artifactId>spark_enrichmentUpdate</artifactId>
 
-    <name>Spark Enrichment</name>
+    <name>Spark Enrichment Update</name>
     <packaging>jar</packaging>
     <version>1.0</version>
 
@@ -68,7 +68,7 @@
                     <arguments>
                         <argument>-classpath</argument>
                         <classpath />
-                        <argument>it.polimi.middleware.spark.enrichment.NoiseEnrichment</argument>
+                        <argument>it.polimi.middleware.spark.enrichment.NoiseEnrichmentUpdate</argument>
                     </arguments>
                 </configuration>
             </plugin>

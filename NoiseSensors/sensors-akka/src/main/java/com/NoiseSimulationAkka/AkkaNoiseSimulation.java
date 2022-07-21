@@ -40,15 +40,16 @@ public class AkkaNoiseSimulation {
     int timeStep = 10000; //10s
     int timeStamp = 0;
 
-    //44.49379649240147, 11.343115957526301 Bologna
-    double posX1 = 44.4937;
-    double posY1 = 11.3431;
-    //44.51017702071235, 11.344914959441521 Bologna
-    double posX2 = 44.5101;
-    double posY2 = 11.3449;
-    //44.53257343793887, 11.288898485205035 Bologna
-    double posX3 = 44.5325;
-    double posY3 = 11.2888;
+    //44.9,8.21 Piemonte --> 45.33,7.87
+    double posX1 = 44.9;
+    double posY1 = 8.21;
+    //45.075866182156595, 6.700603432201298 Piemonte
+    double posX2 = 45.0758;
+    double posY2 = 6.7006;
+    //44.382979402252694, 7.536363030400943 Piemonte
+    double posX3 = 44.3829;
+    double posY3 = 7.5363;
+    
 
     final int QUEUE_SIZE = 6;
 

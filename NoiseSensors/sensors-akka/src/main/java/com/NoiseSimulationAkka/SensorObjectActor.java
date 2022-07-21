@@ -22,7 +22,7 @@ public class SensorObjectActor extends AbstractActor {
     private static final String simulationTopic = "raw_noise_readings";
 
     private static final int numMessages = 100;
-    private static final int waitBetweenMsgs = 500;
+    private static final int waitBetweenMsgs = 100;
     private static final boolean waitAck = true;
 
     private static final String serverAddr = "localhost:9092";
@@ -138,8 +138,8 @@ public class SensorObjectActor extends AbstractActor {
     }
 
     private void moveSensor() {
-        this.posX += 0.0002;
-        this.posY -= 0.0001;
+        this.posX += 0.005;
+        this.posY -= 0.005;
     }
 
     double getMovingAgv() {
